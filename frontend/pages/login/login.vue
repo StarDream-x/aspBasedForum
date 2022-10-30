@@ -37,7 +37,7 @@
 				}).then((res) => {
 					if (res.statusCode == 200) {
 						try {
-							uni.setStorageSync('token', token);
+							uni.setStorageSync('token', res.data.token);
 						} catch (e) {
 							uni.showToast({
 								icon: "none",
@@ -48,6 +48,9 @@
 					let token = uni.getStorageSync('token');
 					if (token) {
 						// TODO:进入首页
+						uni.reLaunch({
+							url:"/pages/contents/contents",
+						})
 					
 					} else {
 						uni.showToast({

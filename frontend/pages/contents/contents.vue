@@ -1,12 +1,13 @@
 <template>
 	<view class="card-list">
-		<ContentCard title="一个一个一个一个一个标题" author="一个一个一个一个一个一个一个一个作者" viewCount="一个阅读量" imageSrc="/static/logo.png" />
-		<ContentCard title="另一个标题" author="另一个作者" viewCount="另一个" imageSrc="/static/logo.png" />
-		<ContentCard title="另一个标题" author="另一个作者" viewCount="另一个" imageSrc="/static/logo.png" />
+		<ContentCard v-for="contents in list" :key="contents.id" :title = "contents.title" :author="contents.authorName" :viewCount="contents.viewCount" :imageSrc="contents.imageUrl" />
+		<!-- <ContentCard title="另一个标题" author="另一个作者" viewCount="另一个" imageSrc="/static/logo.png" />
+		<ContentCard title="另一个标题" author="另一个作者" viewCount="另一个" imageSrc="/static/logo.png" /> -->
 	</view>
 </template>
 
 <script>
+	import {myRequest} from '~@/util/api.js'
 	import ContentCard from '~@/components/ContentCard.vue'
 	export default {
 		components: {
@@ -14,11 +15,57 @@
 		},
 		data() {
 			return {
+				prevRequest:'',
+				list:[]
 				
 			}
 		},
 		methods: {
-			
+			getContent(){
+				let token = uni.getStorageSync('token');
+				if (token) {
+					//尝试取上一次请求的id
+					uni.getStorage({
+						key: 'prevRequest',
+						success: function (res) {
+							this.prevRequest = res.data
+						},
+						fail() {
+							this.prevRequest = null
+						}
+					});
+					// 获得页面信息
+					myRequest({
+						url: 'content',
+						method: 'GET',
+						data: {
+							prevRequest: this.prevRequest,
+
+						}
+					}).then((res) => {
+						if (res.statusCode == 200) {
+							try {
+								uni.setStorageSync('prevRequest', res.data.requestId);
+							} catch (e) {
+								uni.showToast({
+									icon: "none",
+									title: "存储prevRequest失败"
+								})
+							}
+							this.list = res.data.contents
+						}
+					})
+				}
+				else {
+					uni.showToast({
+					icon: "error",
+					title: "请登录后重试"
+					})
+				}
+			}
+		},
+		onLoad() {
+			this.getContent()
 		}
 	}
 </script>

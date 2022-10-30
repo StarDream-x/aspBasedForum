@@ -20,9 +20,7 @@
 </template>
 
 <script>
-	import {
-		myRequest
-	} from '~@/util/api.js'
+	import {myRequest} from '~@/util/api.js'
 	export default {
 		data() {
 			return {
@@ -51,7 +49,7 @@
 					}).then((res)=>{
 						if (res.statusCode == 200) {
 							try {
-								uni.setStorageSync('token', token);
+								uni.setStorageSync('token', res.data.token);
 							} catch (e) {
 								uni.showToast({
 									icon: "none",
@@ -59,13 +57,16 @@
 								})
 							}
 							//TODO 进入首页
+							uni.reLaunch({
+								url:"/pages/contents/contents",
+							})
 						}
 					})
 				}
 			}
-
 		}
 	}
+		
 </script>
 
 <style>
