@@ -3,8 +3,12 @@
 		<text class="title-text">Welcome!</text>
 	</view>
 	<view class="buttons">
-		<button type="primary">登录</button>
-		<button>注册</button>
+		<navigator url="../login/login" hover-class="navigator-hover">
+			<button type="primary">登录</button>
+		</navigator>
+		<navigator url="../register/register" hover-class="navigator-hover">
+			<button>注册</button>
+		</navigator>
 	</view>
 </template>
 
