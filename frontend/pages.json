@@ -34,7 +34,35 @@
             }
             
         }
+        ,{
+            "path" : "pages/user/user",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人主页",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
+	"tabBar": {
+		"backgroundColor": "#fff",
+		"color": "#999",
+		"selectedColor": "#007aff",
+		"list": [
+			{
+				"pagePath": "pages/contents/contents",
+				"text": "首页",
+				"iconPath": "static/icon/home.svg",
+				"selectedIconPath": "static/icon/home_primary.svg"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "个人主页",
+				"iconPath": "static/icon/me.svg",
+				"selectedIconPath": "static/icon/me_primary.svg"
+			}
+		]
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
