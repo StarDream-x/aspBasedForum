@@ -38,6 +38,7 @@
 					if (res.statusCode == 200) {
 						try {
 							uni.setStorageSync('token', res.data.token);
+							uni.setStorageSync('userId',this.data.username);
 						} catch (e) {
 							uni.showToast({
 								icon: "none",

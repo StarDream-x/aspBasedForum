@@ -14,8 +14,7 @@
 		data() {
 			return {
 				prevRequest:'',
-				list:[]
-				
+				list:[]			
 			}
 		},
 		methods: {
@@ -50,7 +49,7 @@
 									title: "存储prevRequest失败"
 								})
 							}
-							this.list = res.data.contents
+							this.list = [...this.list,...res.data.contents]
 						}
 					})
 				}
@@ -63,6 +62,13 @@
 			}
 		},
 		onLoad() {
+			this.getContent()
+		},
+		onReachBottom() {
+			this.getContent()		
+		},
+		onPullDownRefresh() {
+			this.list = []
 			this.getContent()
 		}
 	}
