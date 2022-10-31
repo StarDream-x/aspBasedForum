@@ -5,7 +5,7 @@
 	<view class="panel">
 		<view class="field">
 			<label for="account">账户：</label>
-			<input type="text" id="account" v-model:value="username">
+			<input type="text" id="account" v-model:value="username" @blur="checkAccount">
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
@@ -26,43 +26,67 @@
 			return {
 				username: '',
 				password1: '',
-				password2: ''
+				password2: '',
+				unique:null
 			}
 		},
 		methods: {
 			register() {
-				if(this.password1 != this.password2){
-					uni.showToast({
-						icon: "none",
-						title: "两次密码不一致，请重试"
-					})
-					return;
-				}
-				if (this.password1 == this.password2) {
-					myRequest({
-						url:"register",
-						method:"POST",
-						data:{
-							username:this.username,
-							password:this.password1
-						}
-					}).then((res)=>{
-						if (res.statusCode == 200) {
-							try {
-								uni.setStorageSync('token', res.data.token);
-							} catch (e) {
-								uni.showToast({
-									icon: "none",
-									title: "存储token失败"
+				if(this.unique==true){
+					if(this.password1 != this.password2){
+						uni.showToast({
+							icon: "none",
+							title: "两次密码不一致，请重试"
+						})
+						return;
+					}
+					if (this.password1 == this.password2) {
+						myRequest({
+							url:"register",
+							method:"POST",
+							data:{
+								username:this.username,
+								password:this.password1
+							}
+						}).then((res)=>{
+							if (res.statusCode == 200) {
+								try {
+									uni.setStorageSync('token', res.data.token);
+								} catch (e) {
+									uni.showToast({
+										icon: "none",
+										title: "存储token失败"
+									})
+								}
+								//TODO 进入首页
+								uni.reLaunch({
+									url:"/pages/contents/contents",
 								})
 							}
-							//TODO 进入首页
-							uni.reLaunch({
-								url:"/pages/contents/contents",
-							})
-						}
+						})
+					}
+				}
+				else{
+					uni.showToast({
+						icon: "none",
+						title: "账户重复，请重新填写"
 					})
 				}
+			},
+			checkAccount(e){
+				// console.log("触发")
+				myRequest({
+					url:"register/checkId",
+					method:"GET",
+					data:{
+						id:this.username
+					}
+				}).then((res)=>{
+					if (res.statusCode == 200){
+						this.unique = res.data.valid
+					}				
+				})
+				// console.log(this.unique)
 			}
 		}
 	}
