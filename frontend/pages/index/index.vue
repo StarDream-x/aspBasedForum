@@ -15,7 +15,9 @@
 <script>
 	export default {
 		data() {
-			
+			return {
+				
+			};
 		},
 		onLoad() {
 
@@ -32,7 +34,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: space-evenly;
+		justify-content: center;
 	}
 	
 	.title-text {
@@ -40,7 +42,8 @@
 	}
 	
 	button {
-		margin: 80rpx;
+		margin-top: 80rpx;
+		margin-bottom: 80rpx;
 		width: 300rpx;
 	}
 </style>

@@ -5,11 +5,11 @@
 	<view class="panel">
 		<view class="field">
 			<label for="account">账户：</label>
-			<input type="text" id="account" v-model:value="username" focus placeholder="请输入账户名">
+			<input type="text" id="account" v-model="username" focus placeholder="请输入账户名">
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
-			<input type="safe-password" id="password" v-model:value="password" :password="showPassword" focus placeholder="请输入密码">
+			<input type="safe-password" id="password" v-model="password" :password="showPassword" focus placeholder="请输入密码">
 		</view>
 		<button class="login-button" type="primary" @click="login">登录</button>
 	</view>
@@ -87,6 +87,8 @@
 	}
 
 	.title {
+		margin-left: auto;
+		margin-right: auto;
 		margin-bottom: 200rpx;
 	}
 
@@ -106,6 +108,7 @@
 	}
 
 	input {
+		width: 350rpx;
 		border: 1rpx solid lightgrey;
 		border-radius: 4px;
 		display: inline-block;

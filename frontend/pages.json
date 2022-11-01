@@ -14,7 +14,6 @@
                 "navigationBarTitleText": "登录",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/register/register",
@@ -43,6 +42,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/post/post",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑内容",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",
@@ -54,6 +62,12 @@
 				"text": "首页",
 				"iconPath": "static/icon/home.svg",
 				"selectedIconPath": "static/icon/home_primary.svg"
+			},
+			{
+				"pagePath": "pages/post/post",
+				"text": "发布",
+				"iconPath": "static/icon/add.svg",
+				"selectedIconPath": "static/icon/add_primary.svg"
 			},
 			{
 				"pagePath": "pages/user/user",
@@ -69,5 +83,19 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "content", //模式名称
+				"path": "pages/contents/contents", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "index",
+				"path": "pages/index/index"
+			}
+		]
+	}
 }

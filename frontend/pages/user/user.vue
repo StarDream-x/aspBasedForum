@@ -163,6 +163,7 @@
 
 <style>
 	.user-info {
+		width: 750rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -205,6 +206,10 @@
 		font-size: 36rpx;
 	}
 	
+	.post-list {
+		width: 750rpx;
+	}
+	
 	.post-list__head {
 		border-top: 1px solid lightgrey;
 		border-bottom: 1px solid lightgrey;
@@ -212,5 +217,11 @@
 		
 		font-size: 36rpx;
 		color: #999;
+		box-sizing: border-box;
+		width: 750rpx;
+	}
+	
+	.post-list__body {
+		width: 750rpx;
 	}
 </style>

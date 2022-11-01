@@ -5,15 +5,15 @@
 	<view class="panel">
 		<view class="field">
 			<label for="account">账户：</label>
-			<input type="text" id="account" v-model:value="username" @blur="checkAccount">
+			<input type="text" id="account" v-model="username" @blur="checkAccount">
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
-			<input type="safe-password" id="password" v-model:value="password1">
+			<input type="safe-password" id="password" v-model="password1">
 		</view>
 		<view class="field">
 			<label for="confirm-password">确认密码：</label>
-			<input type="safe-password" id="confirm-password" v-model:value="password2">
+			<input type="safe-password" id="confirm-password" v-model="password2">
 		</view>
 		<button class="login-button" type="primary" @click="register">注册</button>
 	</view>
