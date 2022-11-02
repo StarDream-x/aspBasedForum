@@ -7,6 +7,7 @@
 <script>
 	import {myRequest} from '~@/util/api.js'
 	import ContentCard from '~@/components/content-card.vue'
+	import Mock from 'mockjs'
 	export default {
 		components: {
 			ContentCard
@@ -24,10 +25,10 @@
 					//尝试取上一次请求的id
 					uni.getStorage({
 						key: 'prevRequest',
-						success: function (res) {
+						success: (res) => {
 							this.prevRequest = res.data
 						},
-						fail() {
+						fail: () => {
 							this.prevRequest = null
 						}
 					});
@@ -62,14 +63,28 @@
 			}
 		},
 		onLoad() {
+			Mock.mock(/content/, {
+				requestId: "@datetime",
+				"contents|1-10": [
+					{
+						"id|+1": "1",
+						title:"标题1",
+						authorId: "fsdgsdfg",
+						authorName: "@cname",
+						viewCount: 4567,
+						imageUrl:'/static/logo.png'
+					}
+				]
+			})
 			this.getContent()
 		},
 		onReachBottom() {
-			this.getContent()		
+			this.getContent()
 		},
 		onPullDownRefresh() {
 			this.list = []
 			this.getContent()
+			uni.stopPullDownRefresh()
 		}
 	}
 </script>

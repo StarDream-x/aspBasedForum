@@ -29,7 +29,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "大厅",
-                "enablePullDownRefresh": false
+				"enablePullDownRefresh": true
             }
             
         }
@@ -52,7 +52,7 @@
             
         }
         ,{
-            "path" : "pages/content/content",
+            "path" : "pages/detail/detail",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "内容",
@@ -90,7 +90,8 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"onReachBottomDistance": 50
 	},
 	"uniIdRouter": {},
 	"condition" : { //模式配置，仅开发期间生效

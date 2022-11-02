@@ -17,6 +17,7 @@
 
 <script>
 	import {myRequest} from '~@/util/api.js'
+	import Mock from 'mockjs'
 	export default {
 		data() {
 			return {
@@ -37,8 +38,10 @@
 				}).then((res) => {
 					if (res.statusCode == 200) {
 						try {
-							uni.setStorageSync('token', res.data.token);
-							uni.setStorageSync('userId',this.data.username);
+							const token = res.data.token;
+							const username = res.data.username;
+							uni.setStorageSync('token', token);
+							uni.setStorageSync('userId', username);
 						} catch (e) {
 							uni.showToast({
 								icon: "none",
@@ -61,6 +64,12 @@
 					}
 				})
 			}
+		},
+		onLoad() {
+			Mock.mock('http://localhost:3000/login', {
+				"token": "@datetime",
+				"username": "@cname"
+			})
 		}
 	}
 </script>

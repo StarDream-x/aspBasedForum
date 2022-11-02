@@ -15,10 +15,6 @@
 				<text class="data-item__data">{{collect}}</text>
 				<text class="data-item__name">收藏</text>
 			</view>
-			<view class="data-item data-item-like">
-				<text class="data-item__data">{{like}}</text>
-				<text class="data-item__name">点赞</text>
-			</view>
 		</view>
 	</view>
 	<view class="post-list">
@@ -37,6 +33,7 @@
 <script>	
 	import ContentListItem from '~@/components/content-list-item.vue'
 	import {myRequest} from '~@/util/api.js'
+	import Mock from 'mockjs'
 	export default {
 		data() {
 			return {
@@ -73,7 +70,7 @@
 				if(token){
 					uni.getStorage({
 						key: 'userId',
-						success: function (res) {
+						success: (res) => {
 							this.userId = res.data
 							myRequest({
 								url: 'user/'+this.userId,//存疑：是不是这么写
@@ -92,10 +89,10 @@
 							})
 							uni.getStorage({
 								key: 'lastContentId',
-								success: function (res) {
+								success: (res) => {
 									this.lastContentId = res.data
 								},
-								fail() {
+								fail: () => {
 									this.lastContentId = null
 								}
 							});
@@ -109,7 +106,7 @@
 								}
 							}).then((res) => {
 								if (res.statusCode == 200) {
-									this.list = [...this.list,...res.data.contents]
+									this.list = [...this.list,...res.data]
 									uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)//存疑									
 								}
 							})
@@ -131,15 +128,74 @@
 			}
 		},
 		onLoad() {
+			Mock.mock(/user\//, {
+				id: "userID",
+				avatarUrl: "/static/logo.png",
+				username: "@cname",
+				introduction: "介绍",
+				"followingCount|1-1000": 1,
+				"followerCount|1-1000": 1,
+				"favoriteCount|1-1000": 1
+			});
+			Mock.mock(/content/, [
+				{
+					"id|1-100": 1,
+					title:"标题1",
+					authorId: "fsdgsdfg",
+					authorName: "@cname",
+					viewCount: 4567,
+					imageUrl:'/static/logo.png'
+				},
+				{
+						"id|1-100": 1,
+						title:"标题1",
+						authorId: "fsdgsdfg",
+						authorName: "@cname",
+						viewCount: 4567,
+						imageUrl:'/static/logo.png'
+				},
+				{
+						"id|1-100": 1,
+						title:"标题1",
+						authorId: "fsdgsdfg",
+						authorName: "@cname",
+						viewCount: 4567,
+						imageUrl:'/static/logo.png'
+				},
+				{
+					"id|1-100": 1,
+					title:"标题1",
+					authorId: "fsdgsdfg",
+					authorName: "@cname",
+					viewCount: 4567,
+					imageUrl:'/static/logo.png'
+				},
+				{
+						"id|1-100": 1,
+						title:"标题1",
+						authorId: "fsdgsdfg",
+						authorName: "@cname",
+						viewCount: 4567,
+						imageUrl:'/static/logo.png'
+				},
+				{
+						"id|1-100": 1,
+						title:"标题1",
+						authorId: "fsdgsdfg",
+						authorName: "@cname",
+						viewCount: 4567,
+						imageUrl:'/static/logo.png'
+				}
+			]);
 			this.getInfo();
 		},
 		onReachBottom() {
 			uni.getStorage({
 					key: 'lastContentId',
-					success: function (res) {
+					success: (res) => {
 						this.lastContentId = res.data
 					},
-					fail() {
+					fail: () => {
 						this.lastContentId = null
 					}
 				});
@@ -153,7 +209,7 @@
 					}
 				}).then((res) => {
 					if (res.statusCode == 200) {
-						this.list = [...this.list,...res.data.contents]
+						this.list = [...this.list,...res.data]
 						uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)//存疑									
 					}
 				})

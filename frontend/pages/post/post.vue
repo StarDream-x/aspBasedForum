@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<uni-file-picker v-model="imageValue" title="选择图片" :limit="9" file-mediatype="image" mode="grid"
-			@select="select" @delete="deletepic"></uni-file-picker>
-		<textarea v-module="body" name="text-content" id="text-content" cols="30" rows="20" placeholder="写下你想说的话吧!"></textarea>
-		<button class="post-button" type="primary" @click="postContents">发布</button>
+		<uni-file-picker title="选择图片" :limit="9" file-mediatype="image" mode="grid" @select="select" @delete="deletePic"></uni-file-picker>
+		<input type="text" class="title" placeholder="标题" />
+		<textarea name="text-content" id="text-content" cols="30" rows="20" placeholder="写下你想说的话吧!"></textarea>
+		<button class="post-button" type="primary" @click="postContent">发布</button>
 	</view>
 </template>
 
@@ -12,50 +12,38 @@
 	export default {
 		data() {
 			return {
-				imageValue: [],
-				FilePath:[],
-				media:[],
-				title:"",
-				body:"",
+				filePath: [],
+				media: []
 			}
 		},
 		methods: {
 			select(e) {
-				console.log("选择了图片")
-				console.log(e)
-				await this.uploadImg(e.tempFilePaths);
+				this.uploadImg(e.tempFilePaths[0]);
 			},
-			deletepic(e){
-				console.log("删除了图片")
-				console.log(e)
-				const num = this.FilePath.findIndex(v => v.url === e.tempFilePath);
-				this.media.splice(num, 1);
-				this.FilePath.splice(num, 1);
-			},
-			uploadImg(tempFilePaths) {
-				const tempFilePaths = tempFilePaths;
-				this.FilePath = [...this.FilePath,...tempFilePaths]
+			uploadImg(path) {
+				this.filePath.push(path);
 				uni.uploadFile({
-					url: 'https://localhost:8080/content/media', 
-					filePath: tempFilePaths,
+					url: 'http://localhost:3000/content/media',
+					filePath: path,
 					name: 'file',
-					// formData: {
-					// 	'file': 'test'
-					// },
-					success: (uploadFileRes) => {
-						//console.log(uploadFileRes.data);
-						this.media = [...this.media,...uploadFileRes.data.fileUrl]
+					success: res => {
+						this.media.push(res.data.fileUrl);
 					}
 				});
 			},
-			postContents(){
+			deletePic(e) {
+				const num = this.filePath.findIndex(v => v.url === e.tempFilePath);
+				this.media.splice(num, 1);
+				this.filePath.splice(num, 1);
+			},
+			postContent(e) {
 				myRequest({
 					url: 'content',
 					method: 'POST',
 					data: {
-						title:this.title,
-						body:this.body,
-						media:this.media
+						title: this.title,
+						body: this.body,
+						media: this.media
 					}
 				}).then((res) => {
 					if(res.statusCode == 200){
@@ -75,17 +63,25 @@
 		width: 750rpx;
 		margin-bottom: 50rpx;
 	}
-
+	
+	.title {
+		width: 750rpx;
+		padding: 50rpx;
+		border-top: 1px solid lightgrey;
+		font-size: 36rpx;
+		font-weight: bold;
+	}
+	
 	#text-content {
 		width: 750rpx;
 		padding: 50rpx;
 		border-top: 1px solid lightgray;
 		border-bottom: 1px solid lightgray;
 		margin-bottom: 50rpx;
-
+		
 		box-sizing: border-box;
 	}
-
+	
 	.post-button {
 		width: 500rpx;
 		margin: auto;

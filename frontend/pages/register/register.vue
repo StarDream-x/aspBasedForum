@@ -20,6 +20,7 @@
 </template>
 
 <script>
+	import Mock from 'mockjs';
 	import {myRequest} from '~@/util/api.js'
 	export default {
 		data() {
@@ -88,6 +89,14 @@
 				})
 				// console.log(this.unique)
 			}
+		},
+		onLoad() {
+			Mock.mock(/checkId/, {
+				"valid": true
+			})
+			Mock.mock('http://localhost:3000/register', {
+				"token": "@datetime"
+			})
 		}
 	}
 		
