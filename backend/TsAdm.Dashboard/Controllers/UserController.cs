@@ -35,8 +35,13 @@ namespace TsAdm.Dashboard.Controllers
         public IHttpActionResult login(Body body)
         {
             string code = service.login(body);
-            if (code[0] != '-') return Ok(code);
-            else return BadRequest(code);
+
+            MysqlService mysql = new MysqlService();
+            mysql.test();
+
+            return Ok("ooooops!!!successsssssssss!!!!!!");
+            //if (code[0] != '-') return Ok(code);
+            //else return BadRequest(code);
         }
 
         [HttpGet]

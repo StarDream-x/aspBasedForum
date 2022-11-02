@@ -1,4 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Web.Http;
 
 namespace TsAdm.Dashboard
 {
@@ -11,6 +15,7 @@ namespace TsAdm.Dashboard
 
         protected void Application_PreSendRequestHeaders()
         {
+            //Console.WriteLine(Response.OutputStream);
             Response.Headers.Set("Server", "Apache");
         }
     }
