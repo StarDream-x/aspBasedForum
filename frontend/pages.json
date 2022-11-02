@@ -51,6 +51,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/content/content",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "内容",
+                "enablePullDownRefresh": false
+			}
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",
