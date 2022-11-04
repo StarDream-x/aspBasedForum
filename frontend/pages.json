@@ -60,6 +60,15 @@
 			}
             
         }
+        ,{
+            "path" : "pages/new-comment/new-comment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "发布评论",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",

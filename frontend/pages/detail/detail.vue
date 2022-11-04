@@ -4,21 +4,18 @@
 			<image class="avatar" src="/static/logo.png" mode="aspectFill"></image>
 			<text class="author-name">作者名</text>
 		</view>
-		<swiper class="pictures">
-			<swiper-item>
-				<image src="../../static/logo.png" mode="aspectFit"></image>
-			</swiper-item>
-			<swiper-item>
-				<image src="../../static/logo.png" mode="aspectFit"></image>
-			</swiper-item>
-			<swiper-item>
-				<image src="../../static/logo.png" mode="aspectFit"></image>
-			</swiper-item>
-		</swiper>
+		<ImageSwiper :imageUrls="this.imageUrls" />
 		<view class="text">中文文字Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam nobis hic eligendi ipsum accusantium numquam dolor ad, quam porro ut id. Facere ipsa similique accusantium itaque perspiciatis incidunt quas ab.</view>
-		<view class="comments"></view>
+		<view class="comments">
+			<view class="comments__head">评论</view>
+			<view class="comments__body">
+				<CommentItem avatarUrl="/static/logo.png" authorName='评论发布者' :liked="true" :likeCount="566" content="评论内容" />
+				<CommentItem avatarUrl="/static/logo.png" authorName='评论发布者' :liked="true" :likeCount="566" content="评论内容" />
+			</view>
+		</view>
 	</view>
 	<view class="bottom-panel">
+		<input class="comment-input" type="text" placeholder="发布评论...">
 		<view class="bottom-item">
 			<image v-if="this.liked" class="bottom-item__icon" src="~@/static/icon/like_primary.svg" mode="aspectFill"></image>
 			<image v-else class="bottom-item__icon" src="~@/static/icon/like.svg" mode="aspectFill"></image>
@@ -33,12 +30,23 @@
 </template>
 
 <script>
+	import ImageSwiper from '~@/components/image-swiper.vue'
+	import CommentItem from '~@/components/comment-item.vue'
 	export default {
 		data() {
 			return {
 				liked: true,
-				favorited: false
+				favorited: false,
+				imageUrls: [
+					'/static/logo.png',
+					'/static/logo.png',
+					'/static/logo.png'
+				]
 			}
+		},
+		components: {
+			ImageSwiper,
+			CommentItem
 		},
 		methods: {
 			
@@ -56,7 +64,7 @@
 	.main {
 		width: 750rpx;
 		box-sizing: border-box;
-		padding-bottom: 100rpx;
+		padding-bottom: 150rpx;
 	}
 	
 	.author-info {
@@ -81,18 +89,6 @@
 		margin-left: 40rpx;
 	}
 	
-	.pictures {
-		width: 750rpx;
-		height: 1000rpx;
-	}
-	
-	.pictures image {
-		background-color: black;
-		width: 100%;
-		height: 100%;
-		box-sizing: border-box;
-	}
-	
 	.text {
 		padding: 40rpx;
 		font-size: 36rpx;
@@ -104,7 +100,7 @@
 		bottom: 0;
 		
 		width: 750rpx;
-		height: 100rpx;
+		height: 150rpx;
 		box-sizing: border-box;
 		padding-right: 40rpx;
 		z-index: 5;
@@ -113,6 +109,16 @@
 		
 		display: flex;
 		justify-content: flex-end;
+		align-items: center;
+	}
+	
+	.comment-input {
+		border: 1px solid lightgrey;
+		margin: 80rpx;
+		border-radius: 6px;
+		padding: 20rpx;
+		width: 600rpx;
+		background-color: #eee;
 	}
 	
 	.bottom-item {
@@ -124,12 +130,20 @@
 	}
 	
 	.bottom-item__icon {
-		width: 50rpx;
-		height: 50rpx;
+		width: 60rpx;
+		height: 60rpx;
 	}
 	
 	.bottom-item__text {
 		color: #999;
 		font-size: 20rpx;
+	}
+	
+	.comments__head {
+		width: 750rpx;
+		border-top: 1px solid lightgrey;
+		box-sizing: border-box;
+		padding: 16rpx;
+		font-weight: bold;
 	}
 </style>
