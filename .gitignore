@@ -365,3 +365,6 @@ FodyWeavers.xsd
 
 # Ignore HBuilder output
 unpackage/
+
+# Ignore vite preprocess cache
+.vite/

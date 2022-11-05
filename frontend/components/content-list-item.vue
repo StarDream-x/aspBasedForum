@@ -32,6 +32,7 @@
 	.list-item {
 		width: 100%;
 		height: 220rpx;
+		border-bottom: 1px solid lightgrey;
 		
 		display: flex;
 		align-items: center;
