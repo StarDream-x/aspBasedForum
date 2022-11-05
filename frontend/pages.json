@@ -69,6 +69,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/user-list/user-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/content-list/content-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "内容列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",
