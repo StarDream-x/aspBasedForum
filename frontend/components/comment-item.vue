@@ -6,7 +6,7 @@
 				<text class="author">{{authorName}}</text>
 			</view>
 			<view class="top-info__right">
-				<view class="like">
+				<view class="like" @click="$emit('changeStatus')">
 					<image v-if="this.liked" src="../static/icon/like_primary.svg" mode="aspectFill"></image>
 					<image v-else src="../static/icon/like.svg" mode="aspectFill"></image>
 				</view>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+	import {myRequest} from '~@/util/api.js'
 	export default {
 		name:"comment-item",
 		props: [
@@ -32,6 +33,9 @@
 		data() {
 			return {
 			};
+		},
+		methods(){
+
 		}
 	}
 </script>

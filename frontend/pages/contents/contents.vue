@@ -1,6 +1,6 @@
 <template>
 	<view class="card-list">
-		<ContentCard v-for="contents in list" :key="contents.id" :title = "contents.title" :author="contents.authorName" :viewCount="contents.viewCount" :imageSrc="contents.imageUrl" />
+		<ContentCard v-for="contents in list" @click="goTo(contents)" :key="contents.id" :title = "contents.title" :author="contents.authorName" :viewCount="contents.viewCount" :imageSrc="contents.imageUrl" />
 	</view>
 </template>
 
@@ -19,6 +19,14 @@
 			}
 		},
 		methods: {
+			goTo(contents){
+				uni.navigateTo({
+					url:"/pages/detail/detail",
+					success: (res) => {
+						res.eventChannel.emit('id',contents.id)
+					}
+				})
+			},
 			getContent(){
 				let token = uni.getStorageSync('token');
 				if (token) {
