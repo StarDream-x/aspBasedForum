@@ -3,15 +3,15 @@
 		<image class="avatar" :src="userImg" mode="aspectFill"></image>
 		<text class="username">{{username}}</text>
 		<view class="data-row">
-			<view class="data-item data-item-following">
+			<view class="data-item data-item-following" @click="getFollows">
 				<text class="data-item__data" >{{follownum}}</text>
 				<text class="data-item__name">关注</text>
 			</view>
-			<view class="data-item data-item-follower">
+			<view class="data-item data-item-follower" @click="getFans">
 				<text class="data-item__data">{{fans}}</text>
 				<text class="data-item__name">粉丝</text>
 			</view>
-			<view class="data-item data-item-favorite">
+			<view class="data-item data-item-favorite" @click="getFavorites">
 				<text class="data-item__data">{{collect}}</text>
 				<text class="data-item__name">收藏</text>
 			</view>
@@ -65,6 +65,30 @@
 			ContentListItem
 		},
 		methods: {
+			getFans(){
+				uni.navigateTo({
+					url:"/pages/user-list/user-list",
+					success: (res) => {
+						res.eventChannel.emit('id',[this.userId,'fans'])
+					}
+				})
+			},
+			getFollows(){
+				uni.navigateTo({
+					url:"/pages/user-list/user-list",
+					success: (res) => {
+						res.eventChannel.emit('id',[this.userId,'follows'])
+					}
+				})
+			},
+			getFavorites(){
+				uni.navigateTo({
+					url:"/pages/content-list/content-list",
+					success: (res) => {
+						res.eventChannel.emit('id',this.userId)
+					}
+				})
+			},
 			getInfo(){
 				let token = uni.getStorageSync('token');
 				if(token){

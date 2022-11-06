@@ -14,13 +14,6 @@
 			}
 		},
 		methods: {
-			onload(){
-				this.event = this.getOpenerEventChannel()
-				//接收页面1传来的数据
-				this.event.on('id', (res) => {
-					this.contentsId = res
-				})
-			},
 			release(){
 				myRequest({
 					url:"content/"+this.contentsId+"/comment",
@@ -44,6 +37,13 @@
 				})
 			}
 			
+		},
+		onLoad: go(options){
+			this.event = this.getOpenerEventChannel()
+			//接收页面1传来的数据
+			this.event.on('id', (res) => {
+				this.contentsId = res
+			})
 		}
 	}
 </script>
