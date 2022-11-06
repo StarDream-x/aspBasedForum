@@ -23,7 +23,7 @@
 				uni.navigateTo({
 					url:"/pages/detail/detail",
 					success: (res) => {
-						res.eventChannel.emit('id',contents.id)
+						getApp().globalData.toDetailContentId=contents.id
 					}
 				})
 			},
