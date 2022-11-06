@@ -49,7 +49,6 @@
 					'/static/logo.png'
 				],
 				comments: [],
-				contentsId: null,
 				content: {
 					id:'',
 					title:'',
@@ -172,21 +171,17 @@
 				uni.navigateTo({
 					url: '/pages/new-comment/new-comment',
 					success: (res) => {
-						res.eventChannel.emit('id', contents.id)
+						getApp().globalData.toCommentId = contents.id
 					}
 				})
 
 			}
 		},
-		onLoad: go(options) {
-			this.event = this.getOpenerEventChannel()
-			//接收页面1传来的数据
-			this.event.on('id', (res) => {
-				this.contentsId = res
-			})
+		onLoad(options) {
+			const contentsId = getApp().globalData.toDetailContentId
 			//获得当前用户与该文章的交互情况（有无赞过，有无收藏过）
 			await myRequest({
-				url: "content/" + this.contentsId + "/interaction",
+				url: "content/" + contentsId + "/interaction",
 				method: 'GET'
 			}).then((res) => {
 				if (res.statusCode == 200) {
@@ -196,7 +191,7 @@
 			//获取文章详情
 			//Todo：此处评论中增加信息并绑定至控件
 			await myRequest({
-				url: 'content/' + this.contentsId,
+				url: 'content/' + contentsId,
 				method: 'GET'
 			}).then((res) => {
 				if (res.statusCode == 200) {

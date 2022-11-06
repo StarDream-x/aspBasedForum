@@ -9,7 +9,7 @@
 	export default {
 		data() {
 			return {
-				contentsId:null,
+				contentsId:0,
 				text:''
 			}
 		},
@@ -30,7 +30,7 @@
 						uni.navigateTo({
 							url:"/pages/detail/detail",
 							success: (res) => {
-							res.eventChannel.emit('id',contents.id)
+							getApp().globalData.toDetailContentId = contents.id
 						}
 						})
 					}
@@ -38,12 +38,8 @@
 			}
 			
 		},
-		onLoad: go(options){
-			this.event = this.getOpenerEventChannel()
-			//接收页面1传来的数据
-			this.event.on('id', (res) => {
-				this.contentsId = res
-			})
+		onLoad(options){
+			this.contentsId = getApp().globalData.toCommentId
 		}
 	}
 </script>

@@ -69,7 +69,8 @@
 				uni.navigateTo({
 					url:"/pages/user-list/user-list",
 					success: (res) => {
-						res.eventChannel.emit('id',[this.userId,'fans'])
+						getApp().globalData.toUserlistId = this.userId
+						getApp().globalData.userToWhitch = 1
 					}
 				})
 			},
@@ -77,7 +78,8 @@
 				uni.navigateTo({
 					url:"/pages/user-list/user-list",
 					success: (res) => {
-						res.eventChannel.emit('id',[this.userId,'follows'])
+						getApp().globalData.toUserlistId = this.userId
+						getApp().globalData.userToWhitch = 2
 					}
 				})
 			},
@@ -85,7 +87,7 @@
 				uni.navigateTo({
 					url:"/pages/content-list/content-list",
 					success: (res) => {
-						res.eventChannel.emit('id',this.userId)
+						getApp().globalData.toContentListId = this.userId
 					}
 				})
 			},
