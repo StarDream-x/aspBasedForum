@@ -1,7 +1,7 @@
 <template>
 	<UserInfoPanel :username="this.username" :follownum="this.follownum" 
 	:fans="this.fans" :collect="this.collect" :userImg="this.userImg" 
-	:self="this.self" :following="this.following"/>
+	:self="this.self" :following="this.following" :userId="this.userId"/>
 	<view class="post-list">
 		<view class="post-list__head">发布内容</view>
 		<view class="post-list__body">

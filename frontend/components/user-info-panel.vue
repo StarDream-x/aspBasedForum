@@ -27,6 +27,7 @@
 	export default {
 		name:"user-info-panel",
 		props: [
+			'userId',
 			'username',
 			'follownum',
 			'fans',
