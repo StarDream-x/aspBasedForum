@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 		<view class="author-info">
-			<image class="avatar" :src="detailUser.avatarUrl" mode="aspectFill"></image>
+			<image class="avatar" :src="detailUser.avatarUrl" mode="aspectFill" @click="toUser"></image>
 			<text class="author-name">{{detailUser.username}}</text>
 		</view>
 		<ImageSwiper :imageUrls="this.imageUrls" />
@@ -9,8 +9,8 @@
 		<view class="comments">
 			<view class="comments__head">评论</view>
 			<view class="comments__body">
-				<CommentItem v-for="comment in comments" avatarUrl="/static/logo.png" :authorName='评论发布者'
-					:liked="this.liked" :likeCount="comment.likeCount" :content="comment.content"
+				<CommentItem v-for="comment in comments" :avatarUrl="comment.user.avatarUrl" :authorName="comment.user.username"
+					:liked="comment.liked" :likeCount="comment.likeCount" :content="comment.content"
 					@changeStatus='changeStatus(comment)' />
 			</view>
 		</view>
@@ -76,6 +76,10 @@
 			CommentItem
 		},
 		methods: {
+			toUser(){
+				getApp().globalData.toOtherUserId = this.detailUser.id
+				//TODO：跳转至其他用户页面
+			},
 			//用户点赞事件
 			like() {
 				if (this.liked == false) {

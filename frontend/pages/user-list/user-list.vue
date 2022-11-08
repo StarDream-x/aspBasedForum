@@ -1,43 +1,58 @@
 <template>
 	<view class="user-list">
-		<UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" />
-		<UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" />
-		<UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" />
+		<UserListItem v-for="user in users" :userId="user.id" :avatarUrl="user.avatarUrl" :username="user.username" :introduction="user.introduction" :following="false" @click="goToUser(user)" />
+		<!-- <UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" />
+		<UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" /> -->
 	</view>
 </template>
 
 <script>
+	import {myRequest} from '~@/util/api.js'
 	import UserListItem from '~@/components/user-list-item.vue'
 	export default {
 		data() {
 			return {
-				userId:'',
-				source:''
+				users:[]
 			}
 		},
 		components: {
 			UserListItem
 		},
 		methods: {
-			getList(){
-				if(this.source == 'fans'){
-					//TODO:获取用户粉丝列表
-					
-				}
-				else{
-					//TODO:获取用户关注列表
-					
-				}
+			goToUser(user){
+				//TODO:前往他人主页
 			}
 		},
-		onLoad: go(options){
-			this.event = this.getOpenerEventChannel()
-			//接收页面1传来的数据
-			this.event.on('id', (res) => {
-				this.userId = res[0],
-				this.source = res[1]
-			})
-			getList();
+		onLoad(options){
+			const userId = getApp().globalData.toUserlistId
+			if(getApp().globalData.userToWhitch == 1){
+				//TODO:获取用户粉丝列表
+				myRequest({
+					url: 'user/'+this.userId+"/follower",
+					method: 'GET',
+					data: {
+						id: userId
+					}
+				}).then((res) => {
+					if (res.statusCode == 200){
+						this.users = res.data
+					}
+				})
+			}
+			else{
+				//TODO:获取用户关注列表
+				myRequest({
+					url: 'user/'+this.userId+"/following",
+					method: 'GET',
+					data: {
+						id: userId
+					}
+				}).then((res) => {
+					if (res.statusCode == 200){
+						this.users = res.data
+					}
+				})
+			}
 		}
 	}
 </script>

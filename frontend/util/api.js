@@ -6,6 +6,9 @@ export const myRequest = (options) => {
 			url: BASE_URL + options.url,
 			method: options.method || 'GET',
 			data: options.data || {},
+			header:{
+				Authorization:'token='+ uni.getStorageSync('token') || ''//此处是否需要一起封装起来？
+			}
 			success: (res) => {
 				if (res.statusCode >= 400 && res.statusCode < 500) {
 					return uni.showToast({
