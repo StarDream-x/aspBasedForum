@@ -20,7 +20,11 @@
 		},
 		methods: {
 			goToUser(user){
+				getApp().globalData.toOtherUserId = user.id
 				//TODO:前往他人主页
+				uni.navigateTo({
+					url:"/pages/other-user/other-user"
+				})
 			}
 		},
 		onLoad(options){

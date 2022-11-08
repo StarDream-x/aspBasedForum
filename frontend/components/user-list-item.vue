@@ -30,6 +30,9 @@
 			toUser(){
 				getApp().globalData.toOtherUserId = this.userId
 				//TODO：跳转至其他用户页面
+				uni.navigateTo({
+					url:"/pages/other-user/other-user"
+				})
 			},
 			follow() {
 				//关注与取关事件

@@ -2,7 +2,7 @@
 	<view class="comment-item">
 		<view class="top-info">
 			<view class="top-info__left">
-				<image class="avatar" :src="this.avatarUrl"></image>
+				<image class="avatar" :src="this.avatarUrl" @click="getUser"></image>
 				<text class="author">{{authorName}}</text>
 			</view>
 			<view class="top-info__right">
@@ -24,6 +24,7 @@
 	export default {
 		name:"comment-item",
 		props: [
+			'userId',
 			'avatarUrl',
 			'authorName',
 			'liked',
@@ -35,7 +36,13 @@
 			};
 		},
 		methods(){
-
+			getUser(){
+				getApp().globalData.toOtherUserId = this.userId
+				//TODO：跳转至其他用户页面
+				uni.navigateTo({
+					url:"/pages/other-user/other-user"
+				})
+			}
 		}
 	}
 </script>

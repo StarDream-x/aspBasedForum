@@ -9,7 +9,7 @@
 		<view class="comments">
 			<view class="comments__head">评论</view>
 			<view class="comments__body">
-				<CommentItem v-for="comment in comments" :avatarUrl="comment.user.avatarUrl" :authorName="comment.user.username"
+				<CommentItem v-for="comment in comments" :userId='comment.user.id' :avatarUrl="comment.user.avatarUrl" :authorName="comment.user.username"
 					:liked="comment.liked" :likeCount="comment.likeCount" :content="comment.content"
 					@changeStatus='changeStatus(comment)' />
 			</view>
@@ -79,6 +79,9 @@
 			toUser(){
 				getApp().globalData.toOtherUserId = this.detailUser.id
 				//TODO：跳转至其他用户页面
+				uni.navigateTo({
+					url:"/pages/other-user/other-user"
+				})
 			},
 			//用户点赞事件
 			like() {
