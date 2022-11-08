@@ -1,7 +1,7 @@
 <template>
 	<UserInfoPanel :username="this.username" :follownum="this.follownum" 
 	:fans="this.fans" :collect="this.collect" :userImg="this.userImg" 
-	:self="true" :following="false"/>
+	:self="this.self" :following="this.following"/>
 	<view class="post-list">
 		<view class="post-list__head">发布内容</view>
 		<view class="post-list__body">
@@ -22,9 +22,11 @@
 				userId:null,
 				username:null,
 				follownum:null,
+				following: false,
 				fans:null,
 				collect:null,
 				like:null,
+				self: false,
 				lastContentId:'',
 				list:[
 				]
@@ -36,65 +38,55 @@
 		},
 		methods: {
 			getInfo(){
-				let token = uni.getStorageSync('token');
-				if(token){
-					uni.getStorage({
-						key: 'userId',
-						success: (res) => {
-							this.userId = res.data
-							myRequest({
-								url: 'user/'+this.userId,
-								method: 'GET',
-								data: {
-									id: this.userId
-								}
-							}).then((res) => {
-								if (res.statusCode == 200){
-									this.userImg = res.data.avatarUrl
-									this.username = res.data.username
-									this.follownum = res.data.followingCount
-									this.fans = res.data.followerCount
-									this.collect = res.data.favoriteCount
-								}
-							})
-							uni.getStorage({
-								key: 'lastContentId',
-								success: (res) => {
-									this.lastContentId = res.data
-								},
-								fail: () => {
-									this.lastContentId = null
-								}
-							});
-							//获取用户发布的信息
-							myRequest({
-								url: 'content',
-								method: 'GET',
-								data: {
-									userId:this.userId,
-									lastContentId: this.lastContentId
-								}
-							}).then((res) => {
-								if (res.statusCode == 200) {
-									this.list = [...this.list,...res.data]
-									uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)//存疑									
-								}
-							})
-						},
-						fail() {
-							uni.showToast({
-							icon: "error",
-							title: "登录信息异常"
-							})
-						}
-					});
-				}
-				else{
-					uni.showToast({
-					icon: "error",
-					title: "请登录后重试"
-					})
-				}
+				this.userId = getApp().globalData.toOtherUserId
+				uni.getStorage({
+					key: 'userId',
+					success: (res) => {
+						this.self = (res.data === this.userId)
+					},
+					fail: (res) => {
+						this.self = false
+					}
+				})
+				myRequest({
+					url: 'user/'+this.userId,
+					method: 'GET',
+					data: {
+						id: this.userId
+					}
+				}).then((res) => {
+					if (res.statusCode == 200){
+						this.userImg = res.data.avatarUrl
+						this.username = res.data.username
+						this.follownum = res.data.followingCount
+						this.fans = res.data.followerCount
+						this.collect = res.data.favoriteCount
+						this.following = res.data.following
+					}
+				})
+				uni.getStorage({
+					key: 'lastContentId',
+					success: (res) => {
+						this.lastContentId = res.data
+					},
+					fail: () => {
+						this.lastContentId = null
+					}
+				});
+				//获取用户发布的信息
+				myRequest({
+					url: 'content',
+					method: 'GET',
+					data: {
+						userId:this.userId,
+						lastContentId: this.lastContentId
+					}
+				}).then((res) => {
+					if (res.statusCode == 200) {
+						this.list = [...this.list,...res.data]
+						uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)//存疑									
+					}
+				})
 			}
 		},
 		onLoad() {

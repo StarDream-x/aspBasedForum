@@ -87,6 +87,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/other-user/other-user",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",
