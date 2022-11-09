@@ -20,7 +20,7 @@ namespace TsAdm.Dashboard.Services
             //服务器地址
             builder.Server = "localhost";
             //连接时的数据库
-            builder.Database = "todos";
+            builder.Database = "dotnetFinal";
             //定义与数据连接的链接
             MySqlConnection msc = new MySqlConnection(builder.ConnectionString);
             return msc;
@@ -30,7 +30,7 @@ namespace TsAdm.Dashboard.Services
         {
             MySqlConnection msc = openService();
 
-            string sql = "select * from todo_item";
+            string sql = "select * from user";
             //创建命令对象
             MySqlCommand cmd = new MySqlCommand(sql, msc);
             //打开数据库连接

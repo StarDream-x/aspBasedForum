@@ -15,7 +15,10 @@ namespace TsAdm.Dashboard.Controllers
 {
     public class UserController : ApiController
     {
-        private readonly IUserRepository _userRepository = new UserRepository();
+        //private readonly IUserRepository _userRepository = new UserRepository();
+
+        private Tokenhub tokenhub = new Tokenhub();
+
 
         //private SqlService service = new SqlService();
         private Service service = new Service();
@@ -26,7 +29,12 @@ namespace TsAdm.Dashboard.Controllers
         public IHttpActionResult register(Body body)
         {
             string code = service.register(body);
-            if (code[0] != '-') return Ok(code);
+            if (code[0] != '-')
+            {
+                tokenhub.generateToken();
+                string token = tokenhub.getToken();
+                return Ok(code);
+            }
             else return BadRequest(code);
         }
 
@@ -34,12 +42,12 @@ namespace TsAdm.Dashboard.Controllers
         [Route("login")]
         public IHttpActionResult login(Body body)
         {
-            string code = service.login(body);
+            //Console.WriteLine("CALL LOGIN!");
 
-            MysqlService mysql = new MysqlService();
-            mysql.test();
-
-            return Ok("ooooops!!!successsssssssss!!!!!!");
+            //MysqlService mysql = new MysqlService();
+            //mysql.test();
+            return Ok(body);
+            //return Ok("ooooops!!!successsssssssss!!!!!!");
             //if (code[0] != '-') return Ok(code);
             //else return BadRequest(code);
         }
