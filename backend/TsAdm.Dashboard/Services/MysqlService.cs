@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using TsAdm.Dashboard.RequestBodies;
 
 namespace TsAdm.Dashboard.Services
 {
@@ -46,6 +47,37 @@ namespace TsAdm.Dashboard.Services
             reader.Close();
             msc.Close();
 
+        }
+
+        public bool login(Body body)
+        {
+            bool result = false;
+            try
+            {
+                MySqlConnection msc = openService();
+
+
+                string sql = "select * from user where username = '" + body.username + "' and password = '" + body.password + "'";
+                //创建命令对象
+                MySqlCommand cmd = new MySqlCommand(sql, msc);
+                //打开数据库连接
+                msc.Open();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    return true;
+                }
+
+                reader.Close();
+                msc.Close();
+            }
+            catch(Exception err)
+            {
+                Console.WriteLine(err.Message);
+            }
+            return result;
         }
 
     }

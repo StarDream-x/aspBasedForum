@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TsAdm.Dashboard.RequestBodies;
+using TsAdm.Dashboard.Services;
 
 namespace TsAdm.Dashboard.Services
 {
     public class Service
     {
+        private MysqlService mysql = new MysqlService();
 
         public string register(Body body)
         {
             return body.id;
         }
 
-        public string login(Body body)
+        public bool login(Body body)
         {
-            return "-"+body.id;
+            try
+            {
+                return mysql.login(body);
+            }catch(Exception err)
+            {
+                return false;
+            }
         }
 
         public bool checkId(Query query)

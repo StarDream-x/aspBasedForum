@@ -42,14 +42,16 @@ namespace TsAdm.Dashboard.Controllers
         [Route("login")]
         public IHttpActionResult login(Body body)
         {
-            //Console.WriteLine("CALL LOGIN!");
-
-            //MysqlService mysql = new MysqlService();
-            //mysql.test();
-            return Ok(body);
-            //return Ok("ooooops!!!successsssssssss!!!!!!");
-            //if (code[0] != '-') return Ok(code);
-            //else return BadRequest(code);
+            if (service.login(body))
+            {
+                tokenhub.generateToken();
+                string token = tokenhub.getToken();
+                return Ok(token.ToString());
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet]
