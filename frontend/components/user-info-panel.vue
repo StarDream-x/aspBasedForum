@@ -3,7 +3,7 @@
 		<image class="avatar" :src="userImg" mode="aspectFill"></image>
 		<text class="username">{{username}}</text>
 		<view v-if="!this.self" class="follow-buttons" @click="follow">
-			<button v-if="this.following" class="follow-button" :disabled="true">已关注</button>
+			<button v-if="this.followingState" class="follow-button" :disabled="true">已关注</button>
 			<button v-else class="follow-button" type="primary">关注</button>
 		</view>
 		<view class="data-row">
@@ -40,20 +40,23 @@
 			'following'
 		],
 		data() {
-			return {};
+			return {
+				followingState: this.following
+			};
 		},
 		methods: {
 			follow() {
+				console.log('guanzhu clicked')
 				//关注与取关事件
 				myRequest({
-					url: "me/follow/" + this.userId
+					url: "me/follow/" + this.userId,
 					method: 'PATCH',
 					data: {
-						target_id: this.userId
+						following: !this.followingState
 					}
 				}).then((res) => {
 					if (res.statusCode == 200) {
-						this.following = res.data
+						this.followingState = res.data.following
 					}
 				})
 			},

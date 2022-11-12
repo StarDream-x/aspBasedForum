@@ -7,7 +7,6 @@
 <script>
 	import {myRequest} from '~@/util/api.js'
 	import ContentCard from '~@/components/content-card.vue'
-	import Mock from 'mockjs'
 	export default {
 		components: {
 			ContentCard
@@ -46,7 +45,6 @@
 						method: 'GET',
 						data: {
 							prevRequest: this.prevRequest,
-
 						}
 					}).then((res) => {
 						if (res.statusCode == 200) {
@@ -71,19 +69,6 @@
 			}
 		},
 		onLoad() {
-			Mock.mock(/content/, {
-				requestId: "@datetime",
-				"contents|1-10": [
-					{
-						"id|+1": "1",
-						title:"标题1",
-						authorId: "fsdgsdfg",
-						authorName: "@cname",
-						viewCount: 4567,
-						imageUrl:'/static/logo.png'
-					}
-				]
-			})
 			this.getContent()
 		},
 		onReachBottom() {

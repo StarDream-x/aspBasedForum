@@ -20,7 +20,6 @@
 </template>
 
 <script>
-	import Mock from 'mockjs';
 	import {myRequest} from '~@/util/api.js'
 	export default {
 		data() {
@@ -79,7 +78,7 @@
 				myRequest({
 					url:"register/checkId",
 					method:"GET",
-					data:{
+					data: {
 						id:this.username
 					}
 				}).then((res)=>{
@@ -91,12 +90,6 @@
 			}
 		},
 		onLoad() {
-			Mock.mock(/checkId/, {
-				"valid": true
-			})
-			Mock.mock('http://localhost:3000/register', {
-				"token": "@datetime"
-			})
 		}
 	}
 		

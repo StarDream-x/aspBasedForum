@@ -35,7 +35,7 @@
 			return {
 			};
 		},
-		methods(){
+		methods: {
 			getUser(){
 				getApp().globalData.toOtherUserId = this.userId
 				//TODO：跳转至其他用户页面

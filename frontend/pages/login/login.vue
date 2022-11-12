@@ -5,7 +5,7 @@
 	<view class="panel">
 		<view class="field">
 			<label for="account">账户：</label>
-			<input type="text" id="account" v-model="username" focus placeholder="请输入账户名">
+			<input type="text" id="account" v-model="userId" focus placeholder="请输入账户名">
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
@@ -17,11 +17,10 @@
 
 <script>
 	import {myRequest} from '~@/util/api.js'
-	import Mock from 'mockjs'
 	export default {
 		data() {
 			return {
-				username: '',
+				userId: '',
 				password:'',
 				showPassword:true
 			}
@@ -32,16 +31,15 @@
 					url: 'login',
 					method: 'POST',
 					data: {
-						username: this.username,
+						id: this.userId,
 						password: this.password
 					}
 				}).then((res) => {
 					if (res.statusCode == 200) {
 						try {
 							const token = res.data.token;
-							const username = res.data.username;
 							uni.setStorageSync('token', token);
-							uni.setStorageSync('userId', username);
+							uni.setStorageSync('userId', this.userId);
 						} catch (e) {
 							uni.showToast({
 								icon: "none",
@@ -66,10 +64,6 @@
 			}
 		},
 		onLoad() {
-			Mock.mock('http://localhost:3000/login', {
-				"token": "@datetime",
-				"username": "@cname"
-			})
 		}
 	}
 </script>
