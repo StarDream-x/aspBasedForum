@@ -7,11 +7,11 @@ namespace TsAdm.Dashboard.RequestBodies
 {
     public class Comment
     {
-        public int id { get; set; }
-        public string userId { get; set; }
+        public long id { get; set; }
+        public UserInfo user { get; set; }
         public string content { get; set; }
-        public int likeCount { get; set; }
-        public int publishTime { get; set; }
+        public long likeCount { get; set; }
+        public long publishTime { get; set; }
         public bool like { get; set; }
     }
 }

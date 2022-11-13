@@ -5,7 +5,7 @@
 	<view class="post-list">
 		<view class="post-list__head">发布内容</view>
 		<view class="post-list__body">
-			<ContentListItem v-for="contents in list" :title="contents.title" :author="contents.author" :viewCount="contents.viewCount" :imageSrc="contents.imageUrl" />
+			<ContentListItem v-for="contents in list" :content="contents" />
 		</view>
 	</view>
 </template>
@@ -14,7 +14,6 @@
 	import ContentListItem from '~@/components/content-list-item.vue'
 	import UserInfoPanel from '~@/components/user-info-panel.vue'
 	import {myRequest} from '~@/util/api.js'
-	import Mock from 'mockjs'
 	export default {
 		data() {
 			return {
@@ -45,9 +44,6 @@
 							myRequest({
 								url: 'user/'+this.userId,
 								method: 'GET',
-								data: {
-									id: this.userId
-								}
 							}).then((res) => {
 								if (res.statusCode == 200){
 									this.userImg = res.data.avatarUrl
@@ -77,7 +73,7 @@
 							}).then((res) => {
 								if (res.statusCode == 200) {
 									this.list = [...this.list,...res.data]
-									uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)//存疑									
+									uni.setStorageSync('lastContentId',this.list[this.list.length-1].id)//存疑									
 								}
 							})
 						},
@@ -98,65 +94,6 @@
 			}
 		},
 		onLoad() {
-			Mock.mock(/user\//, {
-				id: "userID",
-				avatarUrl: "/static/logo.png",
-				username: "@cname",
-				introduction: "介绍",
-				"followingCount|1-1000": 1,
-				"followerCount|1-1000": 1,
-				"favoriteCount|1-1000": 1
-			});
-			Mock.mock(/content/, [
-				{
-					"id|1-100": 1,
-					title:"标题1",
-					authorId: "fsdgsdfg",
-					authorName: "@cname",
-					viewCount: 4567,
-					imageUrl:'/static/logo.png'
-				},
-				{
-						"id|1-100": 1,
-						title:"标题1",
-						authorId: "fsdgsdfg",
-						authorName: "@cname",
-						viewCount: 4567,
-						imageUrl:'/static/logo.png'
-				},
-				{
-						"id|1-100": 1,
-						title:"标题1",
-						authorId: "fsdgsdfg",
-						authorName: "@cname",
-						viewCount: 4567,
-						imageUrl:'/static/logo.png'
-				},
-				{
-					"id|1-100": 1,
-					title:"标题1",
-					authorId: "fsdgsdfg",
-					authorName: "@cname",
-					viewCount: 4567,
-					imageUrl:'/static/logo.png'
-				},
-				{
-						"id|1-100": 1,
-						title:"标题1",
-						authorId: "fsdgsdfg",
-						authorName: "@cname",
-						viewCount: 4567,
-						imageUrl:'/static/logo.png'
-				},
-				{
-						"id|1-100": 1,
-						title:"标题1",
-						authorId: "fsdgsdfg",
-						authorName: "@cname",
-						viewCount: 4567,
-						imageUrl:'/static/logo.png'
-				}
-			]);
 			this.getInfo();
 		},
 		onReachBottom() {
@@ -180,7 +117,7 @@
 				}).then((res) => {
 					if (res.statusCode == 200) {
 						this.list = [...this.list,...res.data]
-						uni.setStorageSync('lastContentId',this.list[this.list.size()-1].id)									
+						uni.setStorageSync('lastContentId',this.list[this.list.length-1].id)									
 					}
 				})
 		}

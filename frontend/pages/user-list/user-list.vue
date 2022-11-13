@@ -1,8 +1,6 @@
 <template>
 	<view class="user-list">
-		<UserListItem v-for="user in users" :userId="user.id" :avatarUrl="user.avatarUrl" :username="user.username" :introduction="user.introduction" :following="false" @click="goToUser(user)" />
-		<!-- <UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" />
-		<UserListItem avatarUrl="/static/logo.png" username="用户名" introduction="个人介绍" :following="false" /> -->
+		<UserListItem v-for="u in users" :userId="u.id" :avatarUrl="u.avatarUrl" :username="u.username" :introduction="u.introduction" :following="u.following" />
 	</view>
 </template>
 
@@ -12,7 +10,15 @@
 	export default {
 		data() {
 			return {
-				users:[]
+				users: [
+					{
+						id: "id",
+						avatarUrl: "/static/logo.png",
+						username: 'username',
+						introduction: "introduction",
+						following: false
+					}
+				]
 			}
 		},
 		components: {
@@ -34,9 +40,6 @@
 				myRequest({
 					url: 'user/'+this.userId+"/follower",
 					method: 'GET',
-					data: {
-						id: userId
-					}
 				}).then((res) => {
 					if (res.statusCode == 200){
 						this.users = res.data
@@ -48,9 +51,6 @@
 				myRequest({
 					url: 'user/'+this.userId+"/following",
 					method: 'GET',
-					data: {
-						id: userId
-					}
 				}).then((res) => {
 					if (res.statusCode == 200){
 						this.users = res.data

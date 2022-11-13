@@ -5,6 +5,7 @@
 			<text class="author-name">{{detailUser.username}}</text>
 		</view>
 		<ImageSwiper :imageUrls="this.imageUrls" />
+		<view class="title">{{this.content.title}}</view>
 		<view class="text">{{this.content.body}}</view>
 		<view class="comments">
 			<view class="comments__head">评论</view>
@@ -18,13 +19,13 @@
 	<view class="bottom-panel">
 		<input class="comment-input" type="text" placeholder="发布评论..." @click="goComment">
 		<view class="bottom-item" @click="like">
-			<image v-if="this.liked" class="bottom-item__icon" src="~@/static/icon/like_primary.svg" mode="aspectFill">
+			<image v-if="this.contentInteraction.like" class="bottom-item__icon" src="~@/static/icon/like_primary.svg" mode="aspectFill">
 			</image>
 			<image v-else class="bottom-item__icon" src="~@/static/icon/like.svg" mode="aspectFill"></image>
 			<text class="bottom-item__text">{{this.content.likeCount}}</text>
 		</view>
 		<view class="bottom-item" @click="favorate">
-			<image v-if="this.favorited" class="bottom-item__icon" src="~@/static/icon/favorite_primary.svg"
+			<image v-if="this.contentInteraction.favorite" class="bottom-item__icon" src="~@/static/icon/favorite_primary.svg"
 				mode="aspectFill"></image>
 			<image v-else class="bottom-item__icon" src="~@/static/icon/favorite.svg" mode="aspectFill"></image>
 			<text class="bottom-item__text">{{this.content.favoriteCount}}</text>
@@ -33,20 +34,13 @@
 </template>
 
 <script>
-	import {
-		myRequest
-	} from '~@/util/api.js'
+	import {myRequest} from '~@/util/api.js'
 	import ImageSwiper from '~@/components/image-swiper.vue'
 	import CommentItem from '~@/components/comment-item.vue'
 	export default {
 		data() {
 			return {
-				liked: this.contentInteraction.like,
-				favorited: this.contentInteraction.favorite,
 				imageUrls: [
-					'/static/logo.png',
-					'/static/logo.png',
-					'/static/logo.png'
 				],
 				comments: [],
 				content: {
@@ -85,11 +79,11 @@
 			},
 			//用户点赞事件
 			like() {
-				if (this.liked == false) {
+				if (this.contentInteraction.like == false) {
 					myRequest({
-						url: "content/" + this.contentsId + "/interaction",
-						methord: 'PATCH',
-						data {
+						url: "content/" + this.content.id + "/interaction",
+						method: 'PATCH',
+						data: {
 							like: true
 						}
 					}).then((res) => {
@@ -100,9 +94,9 @@
 					this.content.likeCount++
 				} else {
 					myRequest({
-						url: "content/" + this.contentsId + "/interaction",
-						methord: 'PATCH',
-						data {
+						url: "content/" + this.content.id + "/interaction",
+						method: 'PATCH',
+						data: {
 							like: false
 						}
 					}).then((res) => {
@@ -115,11 +109,11 @@
 			},
 			//用户收藏事件
 			favorate() {
-				if (this.liked == false) {
+				if (this.contentInteraction.favorite == false) {
 					myRequest({
-						url: "content/" + this.contentsId + "/interaction",
-						methord: 'PATCH',
-						data {
+						url: "content/" + this.content.id + "/interaction",
+						method: 'PATCH',
+						data: {
 							favorite: true
 						}
 					}).then((res) => {
@@ -130,9 +124,9 @@
 					this.content.favoriteCount++
 				} else {
 					myRequest({
-						url: "content/" + this.contentsId + "/interaction",
-						methord: 'PATCH',
-						data {
+						url: "content/" + this.content.id + "/interaction",
+						method: 'PATCH',
+						data: {
 							favorite: false
 						}
 					}).then((res) => {
@@ -145,34 +139,33 @@
 			},
 			//接收评论点赞的事件
 			changeStatus(comment) {
-				if (this.like == true) {
+				if (comment.liked == true) {
 					myRequest({
-						url: 'content/' + contentsId + '/comment/' + comment.id,
-						methord: 'PATCH',
-						data {
+						url: 'content/' + this.content.id + '/comment/' + comment.id,
+						method: 'PATCH',
+						data: {
 							like: false
 						}
 					}).then((res) => {
 						if (res.statusCode == 200) {
-							this.liked = res.data
+							comment.liked = res.data.like
 						};
 					})
-					this.likeCount--
+					comment.likeCount--
 				} else {
 					myRequest({
-						url: 'content/' + contentsId + '/comment/' + comment.id,
-						methord: 'PATCH',
-						data {
+						url: 'content/' + this.content.id + '/comment/' + comment.id,
+						method: 'PATCH',
+						data: {
 							like: true
 						}
 					}).then((res) => {
 						if (res.statusCode == 200) {
-							this.liked = res.data
+							comment.liked = res.data.like
 						};
 					})
-					this.likeCount++
+					comment.likeCount++
 				}
-				this.liked = !this.liked
 			},
 			goComment() {
 				uni.navigateTo({
@@ -181,42 +174,40 @@
 						getApp().globalData.toCommentId = contents.id
 					}
 				})
-
 			}
 		},
-		onLoad(options) {
+		async onLoad(options) {
+			
 			const contentsId = getApp().globalData.toDetailContentId
+			let res;
 			//获得当前用户与该文章的交互情况（有无赞过，有无收藏过）
-			await myRequest({
+			res = await myRequest({
 				url: "content/" + contentsId + "/interaction",
 				method: 'GET'
-			}).then((res) => {
-				if (res.statusCode == 200) {
-					this.contentInteraction = res.data
-				}
-			})
+			});
+			if (res.statusCode == 200) {
+				this.contentInteraction = res.data
+			}
+			
 			//获取文章详情
-			//Todo：此处评论中增加信息并绑定至控件
-			await myRequest({
+			res = await myRequest({
 				url: 'content/' + contentsId,
 				method: 'GET'
-			}).then((res) => {
-				if (res.statusCode == 200) {
-					this.content = res.data
-					this.imageUrls = res.data.media.url
-					this.comments = res.data.comments
-				};
-			})
+			});
+			if (res.statusCode == 200) {
+				this.content = res.data
+				this.imageUrls = res.data.media.map(x => x.url)
+				this.comments = res.data.comments
+			}
+			
 			//获取文章作者信息
-			await myRequest({
+			res = await myRequest({
 				url: "user/" + this.content.authorId,
 				method: 'GET'
-			}).then((res) => {
-				if (res.statusCode == 200) {
-					this.detailUser = res.data
-				};
-			})
-
+			});
+			if (res.statusCode === 200) {
+				this.detailUser = res.data
+			}
 		},
 
 	}
@@ -255,6 +246,12 @@
 		font-weight: bold;
 		font-size: 36rpx;
 		margin-left: 40rpx;
+	}
+
+	.title {
+		padding: 40rpx;
+		font-size: 40rpx;
+		font-weight: bold;
 	}
 
 	.text {

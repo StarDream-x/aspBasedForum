@@ -1,7 +1,9 @@
 <script>
+	import mock from '~@/mock/mock.js'
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			mock()
 		},
 		onShow: function() {
 			console.log('App Show')

@@ -11,18 +11,18 @@ namespace TsAdm.Dashboard.Services
     public class MysqlService
     {
         
-        public MySqlConnection openService()
+        public MySqlConnection newConnection()
         {
             //与数据库连接的信息
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
             //用户名
             builder.UserID = "root";
             //密码
-            builder.Password = "123456";
+            builder.Password = "dummy";
             //服务器地址
             builder.Server = "localhost";
             //连接时的数据库
-            builder.Database = "dotnetFinal";
+            builder.Database = "dot_net_final";
             //定义与数据连接的链接
             MySqlConnection msc = new MySqlConnection(builder.ConnectionString);
             return msc;
@@ -30,7 +30,7 @@ namespace TsAdm.Dashboard.Services
         
         public void test()
         {
-            MySqlConnection msc = openService();
+            MySqlConnection msc = newConnection();
 
             string sql = "select * from user";
             //创建命令对象
@@ -49,6 +49,7 @@ namespace TsAdm.Dashboard.Services
             msc.Close();
 
         }
+<<<<<<< HEAD
 
         public bool login(Body body)
         {
@@ -110,5 +111,7 @@ namespace TsAdm.Dashboard.Services
         //    }
         //}
 
+=======
+>>>>>>> 04f3c5337d6df0742b6e99142aa0e31c60a0dc12
     }
 }

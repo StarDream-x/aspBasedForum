@@ -1,11 +1,11 @@
 <template>
-	<view class="list-item">
-		<image class="cover" :src="this.imageSrc || '/static/logo.png'" mode="aspectFill"></image>
+	<view class="list-item" @click="goToDetail">
+		<image class="cover" :src="this.content.imageUrl || '/static/logo.png'" mode="aspectFill"></image>
 		<view class="item-info">
-			<text class="title">{{title || '标题'}}</text>
+			<text class="title">{{content.title || '标题'}}</text>
 			<view class="item-info__bottom">
-				<text class="author">{{author || '作者'}}</text>
-				<text class="view-count">{{viewCount || '阅读量'}}</text>
+				<text class="author">{{content.author || '作者'}}</text>
+				<text class="view-count">{{content.viewCount || '阅读量'}}</text>
 			</view>
 		</view>
 	</view>
@@ -15,15 +15,22 @@
 	export default {
 		name:"content-list-item",
 		props: [
-			'viewCount',
-			'author',
-			'title',
-			'imageSrc'
+			'content'
 		],
 		data() {
 			return {
 				
 			};
+		},
+		methods: {
+			goToDetail(){
+				uni.navigateTo({
+					url:"/pages/detail/detail",
+					success: (res) => {
+						getApp().globalData.toDetailContentId = this.content.id
+					}
+				})
+			}
 		}
 	}
 </script>

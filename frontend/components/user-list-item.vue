@@ -20,7 +20,7 @@
 			'avatarUrl',
 			'username',
 			'introduction',
-			'following'
+			'following',
 			'userId'
 		],
 		data() {
@@ -37,7 +37,7 @@
 			follow() {
 				//关注与取关事件
 				myRequest({
-					url: "me/follow/" + this.userId
+					url: "me/follow/" + this.userId,
 					method: 'PATCH',
 					data: {
 						target_id: this.userId
