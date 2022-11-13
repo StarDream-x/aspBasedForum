@@ -62,6 +62,44 @@ namespace TsAdm.Dashboard.Controllers
         public IHttpActionResult getContentById([FromUri] long id)
         {
             string currentUserId = getCurrentUserId();
+            Content content = contentService.getContent(id, currentUserId);
+            return Ok(content);
+        }
+
+        [HttpGet]
+        [Route("content/{id}/interaction")]
+        public IHttpActionResult getUserContentInteraction([FromUri] long id)
+        {
+            string currentUserId = getCurrentUserId() ;
+            ContentInteraction contentInteraction = contentService.getContentInteraction(id, currentUserId);
+            return Ok(contentInteraction);
+        }
+
+        [HttpPatch]
+        [Route("content/{id}/interaction")]
+        public IHttpActionResult userLike([FromUri] long id,[FromBody] bool like)
+        {
+            string currentUserId = getCurrentUserId();
+            ContentInteraction contentInteraction = contentService.userLike(id,like,currentUserId);
+            return Ok(contentInteraction);
+        }
+
+        [HttpPatch]
+        [Route("content/{id}/interaction")]
+        public IHttpActionResult userFavorite([FromUri] long id, [FromBody] bool favorite)
+        {
+            string currentUserId = getCurrentUserId();
+            ContentInteraction contentInteraction = contentService.userfavorite(id, favorite, currentUserId);
+            return Ok(contentInteraction);
+        }
+
+        [HttpPatch]
+        [Route("content/{content_id}/comment/{comment_id}")]
+        public IHttpActionResult userCommentInteraction([FromUri]long conten_id,[FromUri]long comment_id,[FromBody] bool like)//存疑
+        {
+            string currentUserId = getCurrentUserId();
+            bool result = contentService.userCommentInteract(currentUserId,conten_id,comment_id,like);
+            return Ok(result);
         }
     }
 }

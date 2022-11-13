@@ -3,6 +3,7 @@ using TsAdm.Repository;
 using TsAdm.Dashboard.Services;
 using TsAdm.Dashboard.RequestBodies;
 using System.Collections.Generic;
+using System.Web;
 
 namespace TsAdm.Dashboard.Controllers
 {
@@ -15,6 +16,29 @@ namespace TsAdm.Dashboard.Controllers
         private UserService userService = new UserService();
         private ContentService contentService = new ContentService();
         private AuthenticationService authenticationService = new AuthenticationService();
+
+        private string getCurrentUserId()
+        {
+            string value = HttpContext.Current.Request.Headers["Authorization"];
+            if (!string.IsNullOrEmpty(value) && value.StartsWith("token="))
+            {
+                string token = value.Substring(6);
+                Tokenhub tokenhub = new Tokenhub();
+                string id = tokenhub.getId(token);
+                if (id == "ERROR")
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return id;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
 
         [HttpPost]
         [Route("register")]
@@ -39,7 +63,7 @@ namespace TsAdm.Dashboard.Controllers
         {
             if (authenticationService.login(body))
             {
-                tokenhub.generateToken(body.id);
+                tokenhub.generateToken(body.Id);
                 string token = tokenhub.getToken();
                 return Ok(token);
             }
@@ -59,147 +83,52 @@ namespace TsAdm.Dashboard.Controllers
             return Ok(result);
         }
 
-        ////内容展示与读者交互-获取内容列表
-        //[HttpGet]
-        //[Route("content")]
-        //public IHttpActionResult getContent(Query query)
-        //{
-        //    if (service.getContents(query))
-        //    {
-        //        bool contents = service.getContents(query);
-        //        return Ok(contents.ToString());
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+        //用户资料-获取用户信息
+        [HttpGet]
+        [Route("user/{id}")]
+        public IHttpActionResult getUserInfo([FromUri] string userId)
+        {
+            string currentUserId = getCurrentUserId();
+            UserInfo userInfo = userService.getUserById(userId,currentUserId);
+            return Ok(userInfo); 
+        }
 
-        ////内容展示与读者交互-获取特定用户发布的内容列表
-        //[HttpGet]
-        //[Route("content")]
-        //public IHttpActionResult getContentAbstract(Query query)
-        //{
-        //    if (service.getContentAbstract(query))
-        //    {
-        //        bool contents = service.getContentAbstract(query);
-        //        return Ok(contents.ToString());
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+        //获取用户的收藏列表
+        [HttpGet]
+        [Route("user/{id}/favorite")]
+        public IHttpActionResult getFavorite([FromUri]string userId)
+        {
+            List<ContentAbstract> contentAbstracts = userService.getUserfavorite(userId);
+            return Ok(contentAbstracts);
+        }
 
-        ////内容展示与读者交互-获取内容详情
-        ////路径参数
-        //[HttpGet]
-        //[Route("content/{id}")]
-        //public IHttpActionResult getContent(int id)
-        //{
-        //    Content contents = service.getContents(id);
-        //    if (contents != null)
-        //    {
-        //        return Ok(contents);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
+        //获取用户的关注列表
+        [HttpGet]
+        [Route("user/{id}/following")]
+        public IHttpActionResult getFollowing([FromUri] string userId)
+        {
+            List<UserInfo> userInfos = userService.getUserFollwee(userId);
+            return Ok(userInfos);
+        }
 
-        //}
-
-        ////内容展示与读者交互-获取用户与当前内容的交互情况
-        //[HttpGet]
-        //[Route("content/{id}/interaction")]
-        //public IHttpActionResult getInteraction(int id)
-        //{
-        //    ContentInteraction interaction = service.getInteraction(id);
-
-        //   if(interaction != null)
-        //   {
-        //        return Ok(interaction);
-        //   }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        ////用户点赞/取消点赞
-
-        ////用户收藏/取消收藏
-
-        ////内容展示与读者交互-获取内容评论
-        //[HttpGet]
-        //[Route("content/{id}/comment")]
-        //public IHttpActionResult getComment(int id)
-        //{
-        //    Comment comment = service.getComments(id);
-        //    if (id != null)
-        //    {
-        //        return Ok(comment);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        ////（取消）点赞评论
-
-
-        ////用户资料-获取用户信息
-        //[HttpGet]
-        //[Route("user/{id}")]
-        //public IHttpActionResult getUser(int id)
-        //{
-        //    User user = service.getUsers(id);
-        //    if (id != null)
-        //    {
-        //        return Ok(user);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        ////修改用户信息
-
-        ////获取用户的关注列表
-        //[HttpGet]
-        //[Route("user/{id}/following")]
-        //public IHttpActionResult getFollowing(int id)
-        //{
-        //    User user = service.getFollowings(id);
-        //    if (id != null)
-        //    {
-        //        return Ok(user);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        ////获取用户的粉丝列表
-        //[HttpGet]
-        //[Route("user/{id}/following")]
-        //public IHttpActionResult getFollower(int id)
-        //{
-        //    User user = service.getFollowers(id);
-        //    if (id != null)
-        //    {
-        //        return Ok(user);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+        //获取用户的粉丝列表
+        [HttpGet]
+        [Route("user/{id}/follower")]
+        public IHttpActionResult getFollower([FromUri] string userId)
+        {
+            List<UserInfo> userInfos = userService.getUserFollwer(userId);
+            return Ok(userInfos);
+        }
 
         //关注/取消关注
+        [HttpPatch]
+        [Route("me/follow/{target_id}")]
+        public IHttpActionResult userFollow([FromUri] string target_id,[FromBody]bool following)
+        {
+            string currentUserId = getCurrentUserId();
+            bool res = userService.userFollow(currentUserId, target_id, following);
+            return Ok(res);
+        }
 
         ////内容发布-发布内容
         //[HttpPost]
@@ -217,21 +146,6 @@ namespace TsAdm.Dashboard.Controllers
         //    }
         //}
 
-        ////删除内容
-        //[HttpDelete]
-        //[Route("content/{id}")]
-        //public IHttpActionResult DeleteContent(int id)
-        //{
-        //    if (service.deleteContents(id))
-        //    {
-        //        return Ok(Request.ToString());
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
         ////发布评论
         //[HttpPost]
         //[Route("content/{id}/comment")]
@@ -240,100 +154,5 @@ namespace TsAdm.Dashboard.Controllers
 
         //}
 
-        //删除评论
-        //[HttpDelete]
-        //[Route("content/{content_id}/comment/{comment_id}")]
-        //public IHttpActionResult DeleteComment(Path path)
-        //{
-        //    //if (service.deleteComments(path))
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        /// <summary>
-        /// test APIs
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet]
-        //public IHttpActionResult Get()
-        //{
-        //    return Ok(new { UserName = "Admin", EmailAddress = "master@admin.com" });
-        //}  
-
-        //[HttpGet]
-        //[Route("api")]
-        //public IHttpActionResult GetTodos()
-        //{
-        //    return Ok(service.getTodos());
-        //}
-
-        //[HttpGet]
-        //[Route("api/{id}")]
-        //public IHttpActionResult GetTodos(int id)
-        //{
-        //    return Ok(service.getTodos(id));
-        //}
-
-        //[HttpPost]
-        //[Route("api")]
-        //public IHttpActionResult PostTodos(Todos todo)
-        //{
-        //    return Ok(service.addTodos(todo));
-        //}
-
-
-        //[HttpDelete]
-        //[Route("api/{id}")]
-        //public IHttpActionResult DeleteTodo(int id)
-        //{
-        //    service.deleteTodos(id);
-        //    return Ok();
-        //}
-
-        // The Original codes, which is useless
-        //public IHttpActionResult Find(int id)
-        //{
-        //    Thread.Sleep(new Random().Next(500, 1500));
-        //    var model = _userRepository.FindById(id);
-        //    return Ok(new { data = model });
-        //}
-
-        //[HttpPost]
-        //public IHttpActionResult Grid(UserCommand command)
-        //{
-        //    Thread.Sleep(new Random().Next(500, 1500));
-        //    var response = TxResponseExtensions.GetTxResponseModel;
-        //    var predicateBuilder = PredicateBuilder.Create<User>(null);
-        //    if (!string.IsNullOrEmpty(command.FieldValue))
-        //    {
-        //        switch (command.FieldName)
-        //        {
-        //            case "first_name":
-        //                predicateBuilder = predicateBuilder.And(x => x.first_name.IndexOf(command.FieldValue.ToString(),StringComparison.CurrentCultureIgnoreCase)>=0);
-        //                break;
-        //            case "last_name":
-        //                predicateBuilder = predicateBuilder.And(x => x.last_name.IndexOf(command.FieldValue.ToString(), StringComparison.CurrentCultureIgnoreCase) >= 0);
-        //                break;
-        //            case "email":
-        //                predicateBuilder = predicateBuilder.And(x => x.email.IndexOf(command.FieldValue.ToString(), StringComparison.CurrentCultureIgnoreCase) >= 0);
-        //                break;
-        //        }
-        //    }
-        //    if (!string.Equals(command.Gender, "All", StringComparison.InvariantCultureIgnoreCase))
-        //    {
-        //        predicateBuilder = predicateBuilder.And(x => x.gender == command.Gender);
-        //    }
-        //    var lst = _userRepository.FindPagedList(predicateBuilder, command.Sort.Prop, command.Sort.Desc, command.Pagination.CurrentPage - 1, command.Pagination.PageSize);
-        //    var grid = new DataSource<User>(lst)
-        //    {
-        //        Data = lst
-        //    };
-        //    return Ok(new { response, grid });
-        //}
     }
 }

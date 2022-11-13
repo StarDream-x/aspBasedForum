@@ -177,6 +177,7 @@
     <Compile Include="App_Start\GlobalExceptionHandler.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ContentController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\SearchCommand\BaseCommand.cs" />
