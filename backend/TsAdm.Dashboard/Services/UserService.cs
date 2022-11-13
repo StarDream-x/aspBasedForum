@@ -203,7 +203,33 @@ namespace TsAdm.Dashboard.Services
         //关注,取消关注  同样问题
         public bool userFollow(string currentUserId,string target_id,bool following)
         {
-            return true;
+            using (MySqlConnection msc = mysqlService.newConnection())
+            {
+                msc.Open();
+                if (!following)
+                {
+                    string sql = $"delete from user_following where follower_id = '{currentUserId}' and " +
+                        $"followee_id = '{target_id}'";
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    string sql2 = $"select from user_following where follower_id = '{currentUserId}' and " +
+                        $"followee_id = '{target_id}'";
+                    MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                    using (MySqlDataReader mySqlDataReader = cmd2.ExecuteReader())
+                    {
+                        if (!mySqlDataReader.Read())
+                        {
+                            string sql3 = $"insert into user_following values ('{currentUserId}', '{target_id}')";
+                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                            cmd3.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            return following;
         }
     }
 }

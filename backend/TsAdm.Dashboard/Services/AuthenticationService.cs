@@ -6,7 +6,7 @@ namespace TsAdm.Dashboard.Services
 {
     public class AuthenticationService
     {
-        private MysqlService mysqlService;
+        private MysqlService mysqlService = new MysqlService();
 
         public bool register(RegisterBody body)
         {
@@ -72,36 +72,33 @@ namespace TsAdm.Dashboard.Services
             }
         }
 
-        public bool checkId(Query query)
+        public bool checkId(string id)
         {
-            bool result = false;
             try
             {
-                MySqlConnection msc = mysqlService.newConnection();
-
-
-                string sql = "select * from user where id = '" + query.id + "'";
-                //创建命令对象
-                MySqlCommand cmd = new MySqlCommand(sql, msc);
-                //打开数据库连接
-                msc.Open();
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (MySqlConnection msc = mysqlService.newConnection())
                 {
-                    reader.Close();
-                    return true;
-                }
+                    string sql = "select * from user_info where id = '" + id + "'";
+                    //打开数据库连接
+                    msc.Open();
+                    //创建命令对象
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
 
-                reader.Close();
-                msc.Close();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.Message);
+                return false;
             }
-            return result;
         }
     }
 }

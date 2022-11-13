@@ -7,8 +7,8 @@ namespace TsAdm.Dashboard.Services
 {
     public class ContentService
     {
-        private MysqlService mysqlService;
-        private UserService userService;
+        private MysqlService mysqlService = new MysqlService();
+        private UserService userService = new UserService();
         //获取内容概要
         public List<ContentAbstract> getContents(long prevRequest)
         {
@@ -21,7 +21,7 @@ namespace TsAdm.Dashboard.Services
                         $"user_info.name, content.view_count " +
                         $"from content, user_info " +
                         $"where content.author_id = user_info.id " +
-                        $"order by id limit {prevRequest * 10}, 10";
+                        $"order by content.id limit {prevRequest * 10}, 10";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
 
@@ -48,10 +48,12 @@ namespace TsAdm.Dashboard.Services
                             $"where content_id = {contentId} " +
                             $"limit 1";
                         MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                        MySqlDataReader reader2 = cmd2.ExecuteReader();
-                        if (reader2.Read())
+                        using (MySqlDataReader reader2 = cmd2.ExecuteReader())
                         {
-                            contentAbstract.imageUrl = reader2.GetString(0);
+                            if (reader2.Read())
+                            {
+                                contentAbstract.imageUrl = reader2.GetString(0);
+                            }
                         }
                     }
 
@@ -76,8 +78,8 @@ namespace TsAdm.Dashboard.Services
                         $"user_info.name, content.view_count " +
                         $"from content, user_info " +
                         $"where content.author_id = user_info.id and " +
-                        $"content.author_id = {userId}" +
-                        $"order by id limit {contentsRead * 10}, 10";
+                        $"content.author_id = '{userId}'" +
+                        $"order by content.id limit {contentsRead * 10}, 10";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
 
@@ -104,10 +106,12 @@ namespace TsAdm.Dashboard.Services
                             $"where content_id = {contentId} " +
                             $"limit 1";
                         MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                        MySqlDataReader reader2 = cmd2.ExecuteReader();
-                        if (reader2.Read())
+                        using (MySqlDataReader reader2 = cmd2.ExecuteReader())
                         {
-                            contentAbstract.imageUrl = reader2.GetString(0);
+                            if (reader2.Read())
+                            {
+                                contentAbstract.imageUrl = reader2.GetString(0);
+                            }
                         }
                     }
 
@@ -206,7 +210,7 @@ namespace TsAdm.Dashboard.Services
 
                     foreach (Comment comment in list2)
                     {
-                        string sql4 = $"select * from comment_user_liked where comment_id = {comment.id} and user_id = {currentUserId}";
+                        string sql4 = $"select * from comment_user_liked where comment_id = {comment.id} and user_id = '{currentUserId}'";
                         MySqlCommand cmd4 = new MySqlCommand(sql4, msc);
                         using (MySqlDataReader reader4 = cmd4.ExecuteReader())
                         {
@@ -216,7 +220,7 @@ namespace TsAdm.Dashboard.Services
 
                     foreach (Comment comment in list2)
                     {
-                        string sql5 = $"select * from user_following where follower_id = {currentUserId} and followee_id = {comment.user.id}";
+                        string sql5 = $"select * from user_following where follower_id = '{currentUserId}' and followee_id = {comment.user.id}";
                         MySqlCommand cmd5 = new MySqlCommand(sql5, msc);
                         using (MySqlDataReader reader5 = cmd5.ExecuteReader())
                         {
@@ -240,7 +244,7 @@ namespace TsAdm.Dashboard.Services
                 using (MySqlConnection msc = mysqlService.newConnection())
                 {
                     msc.Open();
-                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = {id}";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
                     ContentInteraction contentInteraction = new ContentInteraction();
@@ -270,7 +274,7 @@ namespace TsAdm.Dashboard.Services
                 using (MySqlConnection msc = mysqlService.newConnection())
                 {
                     msc.Open();
-                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = {id}";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
                     ContentInteraction contentInteraction = new ContentInteraction();
@@ -278,7 +282,7 @@ namespace TsAdm.Dashboard.Services
                     {
                         if (reader.Read())
                         {
-                            string sql2 = $"update content_user_interaction set liked ='{like}' where user_id = '{currentUserId}' and content_id = '{id}'";
+                            string sql2 = $"update content_user_interaction set liked ={like} where user_id = '{currentUserId}' and content_id = {id}";
                             MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
                             cmd2.ExecuteNonQuery();
                             contentInteraction.like = like;
@@ -286,7 +290,7 @@ namespace TsAdm.Dashboard.Services
                         }
                         else
                         {
-                            string sql3 = $"insert into content_user_interaction values ('{id}','{currentUserId}','{like}',false)";
+                            string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',{like},false)";
                             MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
                             cmd3.ExecuteNonQuery();
                         }
@@ -309,7 +313,7 @@ namespace TsAdm.Dashboard.Services
                 using (MySqlConnection msc = mysqlService.newConnection())
                 {
                     msc.Open();
-                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = {id}";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
                     ContentInteraction contentInteraction = new ContentInteraction();
@@ -317,7 +321,7 @@ namespace TsAdm.Dashboard.Services
                     {
                         if (reader.Read())
                         {
-                            string sql2 = $"update content_user_interaction set favorite ='{favorite}' where user_id = '{currentUserId}' and content_id = '{id}'";
+                            string sql2 = $"update content_user_interaction set favorite ={favorite} where user_id = '{currentUserId}' and content_id = {id}";
                             MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
                             cmd2.ExecuteNonQuery();
                             contentInteraction.like = reader.GetBoolean(0);
@@ -325,7 +329,7 @@ namespace TsAdm.Dashboard.Services
                         }
                         else
                         {
-                            string sql3 = $"insert into content_user_interaction values ('{id}','{currentUserId}',false,'{favorite}')";
+                            string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',false,{favorite})";
                             MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
                             cmd3.ExecuteNonQuery();
                         }
@@ -348,16 +352,30 @@ namespace TsAdm.Dashboard.Services
                 using (MySqlConnection msc = mysqlService.newConnection())
                 {
                     msc.Open();
-                    string sql = $"select * from comment_user_liked and content_comment where comment_user_liked.comment_id = content_comment.comment_id " +
-                        $"user_id = '{currentUserId}' and comment_user_liked.comment_id = content_comment.comment_id = '{comment_id}' and content_comment.content_id = ''{content_id}";
-                    //创建命令对象
-                    MySqlCommand cmd = new MySqlCommand(sql, msc);
-                    ContentInteraction contentInteraction = new ContentInteraction();
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    if (!like)
                     {
-                        return false;
+                        string sql = $"delete from comment_user_liked where comment_id = {comment_id} and " +
+                            $"user_id = '{currentUserId}'";
+                        MySqlCommand cmd = new MySqlCommand(sql, msc);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        string sql2 = $"select * from comment_user_liked where comment_id = {comment_id} and " +
+                            $"user_id = '{currentUserId}'";
+                        MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                        using (var reader2 = cmd2.ExecuteReader())
+                        {
+                            if (!reader2.Read())
+                            {
+                                string sql3 = $"insert into comment_user_liked values ({comment_id}, '{currentUserId}')";
+                                MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                                cmd3.ExecuteNonQuery();
+                            }
+                        }
                     }
                 }
+                return like;
             }
             catch (Exception err)
             {

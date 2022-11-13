@@ -1,8 +1,8 @@
 ﻿using System.Web.Http;
-using TsAdm.Domain;
 using TsAdm.Repository;
 using TsAdm.Dashboard.Services;
 using TsAdm.Dashboard.RequestBodies;
+using System.Collections.Generic;
 
 namespace TsAdm.Dashboard.Controllers
 {
@@ -12,205 +12,192 @@ namespace TsAdm.Dashboard.Controllers
 
         private Tokenhub tokenhub = new Tokenhub();
 
+        private UserService userService = new UserService();
+        private ContentService contentService = new ContentService();
+        private AuthenticationService authenticationService = new AuthenticationService();
 
-        //private SqlService service = new SqlService();
-        private Service service = new Service();
-
-        //用户认证-登录-login
         [HttpPost]
         [Route("register")]
-        public IHttpActionResult register(RegisterBody body)
+        public IHttpActionResult register([FromBody] RegisterBody body)
         {
-            //PicSwitcher pic = new PicSwitcher();
-            //pic.storePic();
-
-            string code = service.register(body);
-            if (code[0] != '-')
+            bool result = authenticationService.register(body);
+            if (result)
             {
                 tokenhub.generateToken(body.id);
                 string token = tokenhub.getToken();
-                return Ok(code);
+                return Ok(token);
             }
             else
             {
-                return BadRequest(code);
+                return BadRequest("error");
             }
         }
-        
-        //用户认证-注册-register
+
         [HttpPost]
         [Route("login")]
-        public IHttpActionResult login(RegisterBody body)
+        public IHttpActionResult login([FromBody] LoginBody body)
         {
-            if (service.login(body))
+            if (authenticationService.login(body))
             {
                 tokenhub.generateToken(body.id);
                 string token = tokenhub.getToken();
-                //string s1 = tokenhub.getId(token);
-                //string s2 = tokenhub.getId("QWQ");
-                return Ok(token.ToString());
+                return Ok(token);
             }
             else
             {
-                return BadRequest();
+                return BadRequest("error");
             }
         }
 
         //用户认证-检查id重复情况-checkid
         [HttpGet]
-        [Route("register/checkId")]
-        public IHttpActionResult checkId(Query query)
+        [Route("register/check_id")]
+        public IHttpActionResult checkId(string id)
         {
-            if (service.checkId(query))
-            {
-                bool valid=service.checkId(query);
-                return Ok(valid.ToString());
-            }
-            else
-            {
-                return BadRequest();
-            }
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            result.Add("valid", authenticationService.checkId(id));
+            return Ok(result);
         }
 
-        //内容展示与读者交互-获取内容列表
-        [HttpGet]
-        [Route("content")]
-        public IHttpActionResult getContent(Query query)
-        {
-            if (service.getContents(query))
-            {
-                bool contents = service.getContents(query);
-                return Ok(contents.ToString());
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////内容展示与读者交互-获取内容列表
+        //[HttpGet]
+        //[Route("content")]
+        //public IHttpActionResult getContent(Query query)
+        //{
+        //    if (service.getContents(query))
+        //    {
+        //        bool contents = service.getContents(query);
+        //        return Ok(contents.ToString());
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
-        //内容展示与读者交互-获取特定用户发布的内容列表
-        [HttpGet]
-        [Route("content")]
-        public IHttpActionResult getContentAbstract(Query query)
-        {
-            if (service.getContentAbstract(query))
-            {
-                bool contents = service.getContentAbstract(query);
-                return Ok(contents.ToString());
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////内容展示与读者交互-获取特定用户发布的内容列表
+        //[HttpGet]
+        //[Route("content")]
+        //public IHttpActionResult getContentAbstract(Query query)
+        //{
+        //    if (service.getContentAbstract(query))
+        //    {
+        //        bool contents = service.getContentAbstract(query);
+        //        return Ok(contents.ToString());
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
-        //内容展示与读者交互-获取内容详情
-        //路径参数
-        [HttpGet]
-        [Route("content/{id}")]
-        public IHttpActionResult getContent(int id)
-        {
-            Content contents = service.getContents(id);
-            if (contents != null)
-            {
-                return Ok(contents);
-            }
-            else
-            {
-                return BadRequest();
-            }
+        ////内容展示与读者交互-获取内容详情
+        ////路径参数
+        //[HttpGet]
+        //[Route("content/{id}")]
+        //public IHttpActionResult getContent(int id)
+        //{
+        //    Content contents = service.getContents(id);
+        //    if (contents != null)
+        //    {
+        //        return Ok(contents);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
 
-        }
+        //}
 
-        //内容展示与读者交互-获取用户与当前内容的交互情况
-        [HttpGet]
-        [Route("content/{id}/interaction")]
-        public IHttpActionResult getInteraction(int id)
-        {
-            ContentInteraction interaction = service.getInteraction(id);
-            
-           if(interaction != null)
-           {
-                return Ok(interaction);
-           }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////内容展示与读者交互-获取用户与当前内容的交互情况
+        //[HttpGet]
+        //[Route("content/{id}/interaction")]
+        //public IHttpActionResult getInteraction(int id)
+        //{
+        //    ContentInteraction interaction = service.getInteraction(id);
 
-        //用户点赞/取消点赞
+        //   if(interaction != null)
+        //   {
+        //        return Ok(interaction);
+        //   }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
-        //用户收藏/取消收藏
+        ////用户点赞/取消点赞
 
-        //内容展示与读者交互-获取内容评论
-        [HttpGet]
-        [Route("content/{id}/comment")]
-        public IHttpActionResult getComment(int id)
-        {
-            Comment comment = service.getComments(id);
-            if (id != null)
-            {
-                return Ok(comment);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////用户收藏/取消收藏
 
-        //（取消）点赞评论
+        ////内容展示与读者交互-获取内容评论
+        //[HttpGet]
+        //[Route("content/{id}/comment")]
+        //public IHttpActionResult getComment(int id)
+        //{
+        //    Comment comment = service.getComments(id);
+        //    if (id != null)
+        //    {
+        //        return Ok(comment);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
+
+        ////（取消）点赞评论
 
 
-        //用户资料-获取用户信息
-        [HttpGet]
-        [Route("user/{id}")]
-        public IHttpActionResult getUser(int id)
-        {
-            User user = service.getUsers(id);
-            if (id != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////用户资料-获取用户信息
+        //[HttpGet]
+        //[Route("user/{id}")]
+        //public IHttpActionResult getUser(int id)
+        //{
+        //    User user = service.getUsers(id);
+        //    if (id != null)
+        //    {
+        //        return Ok(user);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
-        //修改用户信息
+        ////修改用户信息
 
-        //获取用户的关注列表
-        [HttpGet]
-        [Route("user/{id}/following")]
-        public IHttpActionResult getFollowing(int id)
-        {
-            User user = service.getFollowings(id);
-            if (id != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////获取用户的关注列表
+        //[HttpGet]
+        //[Route("user/{id}/following")]
+        //public IHttpActionResult getFollowing(int id)
+        //{
+        //    User user = service.getFollowings(id);
+        //    if (id != null)
+        //    {
+        //        return Ok(user);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
-        //获取用户的粉丝列表
-        [HttpGet]
-        [Route("user/{id}/following")]
-        public IHttpActionResult getFollower(int id)
-        {
-            User user = service.getFollowers(id);
-            if (id != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////获取用户的粉丝列表
+        //[HttpGet]
+        //[Route("user/{id}/following")]
+        //public IHttpActionResult getFollower(int id)
+        //{
+        //    User user = service.getFollowers(id);
+        //    if (id != null)
+        //    {
+        //        return Ok(user);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         //关注/取消关注
 
@@ -230,27 +217,27 @@ namespace TsAdm.Dashboard.Controllers
         //    }
         //}
 
-        //删除内容
-        [HttpDelete]
-        [Route("content/{id}")]
-        public IHttpActionResult DeleteContent(int id)
-        {
-            if (service.deleteContents(id))
-            {
-                return Ok(Request.ToString());
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////删除内容
+        //[HttpDelete]
+        //[Route("content/{id}")]
+        //public IHttpActionResult DeleteContent(int id)
+        //{
+        //    if (service.deleteContents(id))
+        //    {
+        //        return Ok(Request.ToString());
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         ////发布评论
         //[HttpPost]
         //[Route("content/{id}/comment")]
         //public IHttpActionResult PostComment(Body body)
         //{
-            
+
         //}
 
         //删除评论
