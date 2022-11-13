@@ -34,7 +34,7 @@ namespace TsAdm.Dashboard.Controllers
             string code = service.register(body);
             if (code[0] != '-')
             {
-                tokenhub.generateToken();
+                tokenhub.generateToken(body.id);
                 string token = tokenhub.getToken();
                 return Ok(code);
             }
@@ -47,8 +47,10 @@ namespace TsAdm.Dashboard.Controllers
         {
             if (service.login(body))
             {
-                tokenhub.generateToken();
+                tokenhub.generateToken(body.id);
                 string token = tokenhub.getToken();
+                //string s1 = tokenhub.getId(token);
+                //string s2 = tokenhub.getId("QWQ");
                 return Ok(token.ToString());
             }
             else
