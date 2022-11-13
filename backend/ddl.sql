@@ -29,7 +29,7 @@ create table content_media(
 
 create table comment_user_liked(
     comment_id bigint,
-    user_id bigint,
+    user_id varchar(20),
     primary key(comment_id, user_id)
 );
 

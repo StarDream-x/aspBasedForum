@@ -9,7 +9,7 @@ namespace TsAdm.Dashboard.Services
     {
         private MysqlService mysqlService;
         private UserService userService;
-
+        //获取内容概要
         public List<ContentAbstract> getContents(long prevRequest)
         {
             try
@@ -64,7 +64,7 @@ namespace TsAdm.Dashboard.Services
                 return null;
             }
         }
-
+        //获取特定用户发布的内容概要
         public List<ContentAbstract> getContentsByUserId(string userId, long contentsRead)
         {
             try
@@ -120,7 +120,7 @@ namespace TsAdm.Dashboard.Services
                 return null;
             }
         }
-
+        //获取内容详情
         public Content getContent(long contentId, string currentUserId)
         {
             try
@@ -230,6 +230,139 @@ namespace TsAdm.Dashboard.Services
             {
                 Console.WriteLine(err.Message);
                 return null;
+            }
+        }
+        //获取当前用户和文章交互情况
+        public ContentInteraction getContentInteraction(long id, string currentUserId)
+        {
+            try
+            {
+                using (MySqlConnection msc = mysqlService.newConnection())
+                {
+                    msc.Open();
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    //创建命令对象
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
+                    ContentInteraction contentInteraction = new ContentInteraction();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            contentInteraction.like = reader.GetBoolean(0);
+                            contentInteraction.favorite = reader.GetBoolean(1);
+                        }
+                        return contentInteraction;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+                return null;
+            }
+        }
+
+        //用户点赞，取消点赞
+        public ContentInteraction userLike(long id, bool like, string currentUserId)
+        {
+            try
+            {
+                using (MySqlConnection msc = mysqlService.newConnection())
+                {
+                    msc.Open();
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    //创建命令对象
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
+                    ContentInteraction contentInteraction = new ContentInteraction();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string sql2 = $"update content_user_interaction set liked ='{like}' where user_id = '{currentUserId}' and content_id = '{id}'";
+                            MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                            cmd2.ExecuteNonQuery();
+                            contentInteraction.like = like;
+                            contentInteraction.favorite = reader.GetBoolean(1);
+                        }
+                        else
+                        {
+                            string sql3 = $"insert into content_user_interaction values ('{id}','{currentUserId}','{like}',false)";
+                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                            cmd3.ExecuteNonQuery();
+                        }
+                        return contentInteraction;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+                return null;
+            }
+        }
+
+        //用户收藏，取消收藏
+        public ContentInteraction userfavorite(long id, bool favorite, string currentUserId)
+        {
+            try
+            {
+                using (MySqlConnection msc = mysqlService.newConnection())
+                {
+                    msc.Open();
+                    string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = '{id}'";
+                    //创建命令对象
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
+                    ContentInteraction contentInteraction = new ContentInteraction();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string sql2 = $"update content_user_interaction set favorite ='{favorite}' where user_id = '{currentUserId}' and content_id = '{id}'";
+                            MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                            cmd2.ExecuteNonQuery();
+                            contentInteraction.like = reader.GetBoolean(0);
+                            contentInteraction.favorite = favorite;
+                        }
+                        else
+                        {
+                            string sql3 = $"insert into content_user_interaction values ('{id}','{currentUserId}',false,'{favorite}')";
+                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                            cmd3.ExecuteNonQuery();
+                        }
+                        return contentInteraction;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+                return null;
+            }
+        }
+
+        //点赞评论 存疑 1.要不要存 like在数据库中，如果不存，会不会有问题   2.err.message怎末传递
+        public bool userCommentInteract(string currentUserId, long content_id,long comment_id,bool like)
+        {
+            try
+            {
+                using (MySqlConnection msc = mysqlService.newConnection())
+                {
+                    msc.Open();
+                    string sql = $"select * from comment_user_liked and content_comment where comment_user_liked.comment_id = content_comment.comment_id " +
+                        $"user_id = '{currentUserId}' and comment_user_liked.comment_id = content_comment.comment_id = '{comment_id}' and content_comment.content_id = ''{content_id}";
+                    //创建命令对象
+                    MySqlCommand cmd = new MySqlCommand(sql, msc);
+                    ContentInteraction contentInteraction = new ContentInteraction();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+                return false;
             }
         }
     }
