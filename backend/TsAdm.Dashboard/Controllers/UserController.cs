@@ -28,8 +28,10 @@ namespace TsAdm.Dashboard.Controllers
                 string token = tokenhub.getToken();
                 return Ok(code);
             }
-            else 
+            else
+            {
                 return BadRequest(code);
+            }
         }
         
         //用户认证-注册-register
