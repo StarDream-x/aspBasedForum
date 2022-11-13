@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
@@ -79,6 +80,35 @@ namespace TsAdm.Dashboard.Services
             }
             return result;
         }
+
+        /// <summary>
+        /// store the entire message of picture in db, abandoned
+        /// </summary>
+        /// <param name="pbytes"></param>
+        /// <param name="pUrl"></param>
+        /// <param name="pname"></param>
+        //public void storePic(byte[] pbytes, string pUrl, string pname = "test")
+        //{
+        //    try
+        //    {
+        //        MySqlConnection msc = openService();
+
+        //        string sql = "insert into pic values('" + pname + "','" + pUrl + "',@photoBinary)";
+
+        //        MySqlCommand cmd = new MySqlCommand(sql, msc);
+        //        cmd.Parameters.Add("@photoBinary", MySqlDbType.Blob);//, pbytes.Length);
+        //        cmd.Parameters["@photoBinary"].Value = pbytes;
+
+        //        msc.Open();
+        //        cmd.ExecuteNonQuery();
+        //        msc.Close();
+
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Console.WriteLine(err.Message);
+        //    }
+        //}
 
     }
 }

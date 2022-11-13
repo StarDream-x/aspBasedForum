@@ -28,6 +28,9 @@ namespace TsAdm.Dashboard.Controllers
         [Route("register")]
         public IHttpActionResult register(Body body)
         {
+            //PicSwitcher pic = new PicSwitcher();
+            //pic.storePic();
+
             string code = service.register(body);
             if (code[0] != '-')
             {

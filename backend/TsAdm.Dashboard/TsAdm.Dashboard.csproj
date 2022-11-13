@@ -146,6 +146,7 @@
     <Compile Include="RequestBodies\MediaItem.cs" />
     <Compile Include="RequestBodies\Query.cs" />
     <Compile Include="Services\MysqlService.cs" />
+    <Compile Include="Services\PicSwitcher.cs" />
     <Compile Include="Services\Service.cs" />
     <Compile Include="Services\SqlService.cs" />
     <Compile Include="Services\Todos.cs" />
