@@ -1,16 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Web.Http;
-using TsAdm.Core.Extensions;
-using TsAdm.Dashboard.Models;
-using TsAdm.Dashboard.Models.SearchCommand;
-using TsAdm.Dashboard.Util.TsResponse;
+﻿using System.Web.Http;
 using TsAdm.Domain;
 using TsAdm.Repository;
 using TsAdm.Dashboard.Services;
 using TsAdm.Dashboard.RequestBodies;
-using System.IO;
 
 namespace TsAdm.Dashboard.Controllers
 {
@@ -27,7 +19,7 @@ namespace TsAdm.Dashboard.Controllers
         //用户认证-登录-login
         [HttpPost]
         [Route("register")]
-        public IHttpActionResult register(Body body)
+        public IHttpActionResult register(RegisterBody body)
         {
             string code = service.register(body);
             if (code[0] != '-')
@@ -43,7 +35,7 @@ namespace TsAdm.Dashboard.Controllers
         //用户认证-注册-register
         [HttpPost]
         [Route("login")]
-        public IHttpActionResult login(Body body)
+        public IHttpActionResult login(RegisterBody body)
         {
             if (service.login(body))
             {
@@ -215,21 +207,21 @@ namespace TsAdm.Dashboard.Controllers
 
         //关注/取消关注
 
-        //内容发布-发布内容
-        [HttpPost]
-        [Route("content")]
-        public IHttpActionResult PostContent(Body body)
-        {
-            if (service.postContents(body))
-            {
-                bool contents = service.postContents(body);
-                return Ok(contents.ToString());
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        ////内容发布-发布内容
+        //[HttpPost]
+        //[Route("content")]
+        //public IHttpActionResult PostContent(Body body)
+        //{
+        //    if (service.postContents(body))
+        //    {
+        //        bool contents = service.postContents(body);
+        //        return Ok(contents.ToString());
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         //删除内容
         [HttpDelete]
@@ -246,28 +238,28 @@ namespace TsAdm.Dashboard.Controllers
             }
         }
 
-        //发布评论
-        [HttpPost]
-        [Route("content/{id}/comment")]
-        public IHttpActionResult PostComment(Body body)
-        {
+        ////发布评论
+        //[HttpPost]
+        //[Route("content/{id}/comment")]
+        //public IHttpActionResult PostComment(Body body)
+        //{
             
-        }
+        //}
 
         //删除评论
-        [HttpDelete]
-        [Route("content/{content_id}/comment/{comment_id}")]
-        public IHttpActionResult DeleteComment(Path path)
-        {
-            if (service.deleteComments(path))
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        //[HttpDelete]
+        //[Route("content/{content_id}/comment/{comment_id}")]
+        //public IHttpActionResult DeleteComment(Path path)
+        //{
+        //    //if (service.deleteComments(path))
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         /// <summary>
         /// test APIs

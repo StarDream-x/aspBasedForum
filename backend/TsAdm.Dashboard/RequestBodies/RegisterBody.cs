@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TsAdm.Dashboard.RequestBodies
 {
-    public class Body
+    public class RegisterBody
     {
         public string id { get; set; }
         public string username { get; set; }

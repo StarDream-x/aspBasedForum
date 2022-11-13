@@ -15,12 +15,12 @@ namespace TsAdm.Dashboard.Services
     {
         private MysqlService mysql = new MysqlService();
 
-        public string register(Body body)
+        public string register(RegisterBody body)
         {
             return body.id;
         }
 
-        public bool login(Body body)
+        public bool login(RegisterBody body)
         {
             try
             {
@@ -139,17 +139,17 @@ namespace TsAdm.Dashboard.Services
             }
         }
 
-        public bool postContents(Body body)
-        {
-            try
-            {
-                return mysql.Content(body);
-            }
-            catch (Exception err)
-            {
-                return false;
-            }
-        }
+        //public bool postContents(Body body)
+        //{
+        //    try
+        //    {
+        //        //return mysql.Content(body);
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public bool deleteContents(int id)
         {

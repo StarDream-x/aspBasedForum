@@ -7,13 +7,8 @@ namespace TsAdm.Dashboard.RequestBodies
 {
     public class MediaItem
     {
-        public enum mediaType
-        {
-            picture,
-            video
-        }
-        public mediaType type { get; set; }
-        public string imageUrl;
-        public string url;
+        public string type { get; set; }
+        public string imageUrl { get; set; }
+        public string url { get; set; }
     }
 }
