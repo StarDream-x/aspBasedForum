@@ -77,29 +77,33 @@ namespace TsAdm.Dashboard.Controllers
 
         [HttpPatch]
         [Route("content/{id}/interaction")]
-        public IHttpActionResult userLike([FromUri] long id,[FromBody] bool like)
+        public IHttpActionResult patchContentInteraction([FromUri] long id, [FromBody] Dictionary<string, bool> body)
         {
             string currentUserId = getCurrentUserId();
-            ContentInteraction contentInteraction = contentService.userLike(id,like,currentUserId);
-            return Ok(contentInteraction);
-        }
-
-        [HttpPatch]
-        [Route("content/{id}/interaction")]
-        public IHttpActionResult userFavorite([FromUri] long id, [FromBody] bool favorite)
-        {
-            string currentUserId = getCurrentUserId();
-            ContentInteraction contentInteraction = contentService.userfavorite(id, favorite, currentUserId);
-            return Ok(contentInteraction);
+            if (body.TryGetValue("like", out bool like))
+            {
+                contentService.userLike(id,like,currentUserId);
+            }
+            if (body.TryGetValue("favorite", out bool favorite))
+            {
+                contentService.userfavorite(id, favorite, currentUserId);
+            }
+            return Ok(contentService.getContentInteraction(id, currentUserId));
         }
 
         [HttpPatch]
         [Route("content/{content_id}/comment/{comment_id}")]
-        public IHttpActionResult userCommentInteraction([FromUri]long conten_id,[FromUri]long comment_id,[FromBody] bool like)//存疑
+        public IHttpActionResult userCommentInteraction([FromUri]long content_id,[FromUri]long comment_id,[FromBody] Dictionary<string, bool> body)//存疑
         {
             string currentUserId = getCurrentUserId();
-            bool result = contentService.userCommentInteract(currentUserId,conten_id,comment_id,like);
-            return Ok(result);
+            if (body.TryGetValue("like", out bool like))
+            {
+                bool result = contentService.userCommentInteract(currentUserId, content_id, comment_id, like);
+                Dictionary<string, bool> result2 = new Dictionary<string, bool>();
+                result2.Add("like", result);
+                return Ok(result2);
+            }
+            return BadRequest("Malformed request body");
         }
     }
 }

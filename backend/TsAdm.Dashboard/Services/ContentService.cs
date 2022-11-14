@@ -133,7 +133,7 @@ namespace TsAdm.Dashboard.Services
                 {
                     msc.Open();
                     string sql = $"select content.id, content.title, author_id, " +
-                        $"view_count, like_count, favorite_count, publish_time, body" +
+                        $"view_count, like_count, favorite_count, publish_time, body " +
                         $"from content " +
                         $"where content.id = {contentId}";
                     //创建命令对象
@@ -177,7 +177,7 @@ namespace TsAdm.Dashboard.Services
 
                     string sql3 = $"select comment.id, user_info.id, user_info.name, user_info.avatar_url, " +
                         $"user_info.introduction, user_info.following_count, user_info.follower_count, " +
-                        $"user_info.favorite_count, comment.content, comment.like_count" +
+                        $"user_info.favorite_count, comment.content, comment.like_count " +
                         $"from comment, user_info, content_comment " +
                         $"where comment.user_id = user_info.id and " +
                         $"content_comment.content_id = {contentId} and " +
@@ -220,13 +220,14 @@ namespace TsAdm.Dashboard.Services
 
                     foreach (Comment comment in list2)
                     {
-                        string sql5 = $"select * from user_following where follower_id = '{currentUserId}' and followee_id = {comment.user.id}";
+                        string sql5 = $"select * from user_following where follower_id = '{currentUserId}' and followee_id = '{comment.user.id}'";
                         MySqlCommand cmd5 = new MySqlCommand(sql5, msc);
                         using (MySqlDataReader reader5 = cmd5.ExecuteReader())
                         {
                             comment.user.following = reader5.Read();
                         }
                     }
+                    content.comments = list2.ToArray();
                     return content;
                 }
             }
@@ -267,7 +268,7 @@ namespace TsAdm.Dashboard.Services
         }
 
         //用户点赞，取消点赞
-        public ContentInteraction userLike(long id, bool like, string currentUserId)
+        public void userLike(long id, bool like, string currentUserId)
         {
             try
             {
@@ -277,36 +278,34 @@ namespace TsAdm.Dashboard.Services
                     string sql = $"select liked, favorite from content_user_interaction where user_id = '{currentUserId}' and content_id = {id}";
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
-                    ContentInteraction contentInteraction = new ContentInteraction();
+                    bool exist;
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
-                        {
-                            string sql2 = $"update content_user_interaction set liked ={like} where user_id = '{currentUserId}' and content_id = {id}";
-                            MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                            cmd2.ExecuteNonQuery();
-                            contentInteraction.like = like;
-                            contentInteraction.favorite = reader.GetBoolean(1);
-                        }
-                        else
-                        {
-                            string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',{like},false)";
-                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
-                            cmd3.ExecuteNonQuery();
-                        }
-                        return contentInteraction;
+                        exist = reader.Read();
+                    }
+                    if (exist)
+                    {
+                        string sql2 = $"update content_user_interaction set liked ={like} where user_id = '{currentUserId}' and content_id = {id}";
+                        MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                        cmd2.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',{like},false)";
+                        MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                        cmd3.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.Message);
-                return null;
+                return;
             }
         }
 
         //用户收藏，取消收藏
-        public ContentInteraction userfavorite(long id, bool favorite, string currentUserId)
+        public void userfavorite(long id, bool favorite, string currentUserId)
         {
             try
             {
@@ -317,30 +316,30 @@ namespace TsAdm.Dashboard.Services
                     //创建命令对象
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
                     ContentInteraction contentInteraction = new ContentInteraction();
+                    bool exist;
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
-                        {
-                            string sql2 = $"update content_user_interaction set favorite ={favorite} where user_id = '{currentUserId}' and content_id = {id}";
-                            MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                            cmd2.ExecuteNonQuery();
-                            contentInteraction.like = reader.GetBoolean(0);
-                            contentInteraction.favorite = favorite;
-                        }
-                        else
-                        {
-                            string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',false,{favorite})";
-                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
-                            cmd3.ExecuteNonQuery();
-                        }
-                        return contentInteraction;
+                        exist = reader.Read();
                     }
+                    if (exist)
+                    {
+                        string sql2 = $"update content_user_interaction set favorite ={favorite} where user_id = '{currentUserId}' and content_id = {id}";
+                        MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                        cmd2.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        string sql3 = $"insert into content_user_interaction values ({id},'{currentUserId}',false,{favorite})";
+                        MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                        cmd3.ExecuteNonQuery();
+                    }
+
                 }
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.Message);
-                return null;
+                return;
             }
         }
 
@@ -364,14 +363,16 @@ namespace TsAdm.Dashboard.Services
                         string sql2 = $"select * from comment_user_liked where comment_id = {comment_id} and " +
                             $"user_id = '{currentUserId}'";
                         MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                        bool exist;
                         using (var reader2 = cmd2.ExecuteReader())
                         {
-                            if (!reader2.Read())
-                            {
-                                string sql3 = $"insert into comment_user_liked values ({comment_id}, '{currentUserId}')";
-                                MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
-                                cmd3.ExecuteNonQuery();
-                            }
+                            exist = reader2.Read();
+                        }
+                        if (!exist)
+                        {
+                            string sql3 = $"insert into comment_user_liked values ({comment_id}, '{currentUserId}')";
+                            MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                            cmd3.ExecuteNonQuery();
                         }
                     }
                 }

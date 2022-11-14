@@ -7,7 +7,7 @@ namespace TsAdm.Dashboard.Services
 {
     public class PostService
     {
-        private MysqlService mysqlService;
+        private MysqlService mysqlService = new MysqlService();
 
         public void postComment(long contentId, string text, string currentUserId)
         {

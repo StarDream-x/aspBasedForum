@@ -49,7 +49,9 @@ namespace TsAdm.Dashboard.Controllers
             {
                 tokenhub.generateToken(body.id);
                 string token = tokenhub.getToken();
-                return Ok(token);
+                Dictionary<string, object> result2 = new Dictionary<string, object>();
+                result2.Add("token", token);
+                return Ok(result2);
             }
             else
             {
@@ -65,7 +67,9 @@ namespace TsAdm.Dashboard.Controllers
             {
                 tokenhub.generateToken(body.Id);
                 string token = tokenhub.getToken();
-                return Ok(token);
+                Dictionary<string, object> result = new Dictionary<string, object>();
+                result.Add("token", token);
+                return Ok(result);
             }
             else
             {
@@ -86,48 +90,54 @@ namespace TsAdm.Dashboard.Controllers
         //用户资料-获取用户信息
         [HttpGet]
         [Route("user/{id}")]
-        public IHttpActionResult getUserInfo([FromUri] string userId)
+        public IHttpActionResult getUserInfo([FromUri] string id)
         {
             string currentUserId = getCurrentUserId();
-            UserInfo userInfo = userService.getUserById(userId,currentUserId);
+            UserInfo userInfo = userService.getUserById(id,currentUserId);
             return Ok(userInfo); 
         }
 
         //获取用户的收藏列表
         [HttpGet]
         [Route("user/{id}/favorite")]
-        public IHttpActionResult getFavorite([FromUri]string userId)
+        public IHttpActionResult getFavorite([FromUri]string id)
         {
-            List<ContentAbstract> contentAbstracts = userService.getUserfavorite(userId);
+            List<ContentAbstract> contentAbstracts = userService.getUserfavorite(id);
             return Ok(contentAbstracts);
         }
 
         //获取用户的关注列表
         [HttpGet]
         [Route("user/{id}/following")]
-        public IHttpActionResult getFollowing([FromUri] string userId)
+        public IHttpActionResult getFollowing([FromUri] string id)
         {
-            List<UserInfo> userInfos = userService.getUserFollwee(userId);
+            List<UserInfo> userInfos = userService.getUserFollwee(id);
             return Ok(userInfos);
         }
 
         //获取用户的粉丝列表
         [HttpGet]
         [Route("user/{id}/follower")]
-        public IHttpActionResult getFollower([FromUri] string userId)
+        public IHttpActionResult getFollower([FromUri] string id)
         {
-            List<UserInfo> userInfos = userService.getUserFollwer(userId);
+            List<UserInfo> userInfos = userService.getUserFollwer(id);
             return Ok(userInfos);
         }
 
         //关注/取消关注
         [HttpPatch]
         [Route("me/follow/{target_id}")]
-        public IHttpActionResult userFollow([FromUri] string target_id,[FromBody]bool following)
+        public IHttpActionResult userFollow([FromUri] string target_id,[FromBody] Dictionary<string, bool> body)
         {
-            string currentUserId = getCurrentUserId();
-            bool res = userService.userFollow(currentUserId, target_id, following);
-            return Ok(res);
+            if (body.TryGetValue("following", out bool following))
+            {
+                string currentUserId = getCurrentUserId();
+                bool res = userService.userFollow(currentUserId, target_id, following);
+                Dictionary<string, bool> result = new Dictionary<string, bool>();
+                result.Add("following", res);
+                return Ok(result);
+            }
+            return BadRequest("Malformed request body");
         }
 
         ////内容发布-发布内容

@@ -198,9 +198,6 @@
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\MysqlService.cs" />
     <Compile Include="Services\PicSwitcher.cs" />
-    <Compile Include="Services\Service.cs" />
-    <Compile Include="Services\SqlService.cs" />
-    <Compile Include="Services\Todos.cs" />
     <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Util\TsResponse\ResponseModel.cs" />

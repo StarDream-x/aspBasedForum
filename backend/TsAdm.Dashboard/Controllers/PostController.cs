@@ -36,10 +36,13 @@ namespace TsAdm.Dashboard.Controllers
 
         [HttpPost]
         [Route("content/{id}/comment")]
-        public IHttpActionResult postComment([FromUri] long content_id,[FromBody] string text)
+        public IHttpActionResult postComment([FromUri] long id,[FromBody] Dictionary<string, string> body)
         {
             string currentUserId = getCurrentUserId();
-            postService.postComment(content_id, text, currentUserId);
+            if (body.TryGetValue("content", out string text))
+            {
+                postService.postComment(id, text, currentUserId);
+            }
             return Ok();
         }
     }

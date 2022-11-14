@@ -88,10 +88,10 @@ namespace TsAdm.Dashboard.Services
                     {
                         if (reader.Read())
                         {
-                            return true;
+                            return false;
                         }
                     }
-                    return false;
+                    return true;
                 }
             }
             catch (Exception err)
