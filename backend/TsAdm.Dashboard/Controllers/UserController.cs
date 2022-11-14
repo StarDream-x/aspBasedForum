@@ -4,6 +4,11 @@ using TsAdm.Dashboard.Services;
 using TsAdm.Dashboard.RequestBodies;
 using System.Collections.Generic;
 using System.Web;
+using System.Net.Http;
+using System.IO;
+using System.Net;
+using System.Net.Http.Headers;
+using System;
 
 namespace TsAdm.Dashboard.Controllers
 {
@@ -16,7 +21,7 @@ namespace TsAdm.Dashboard.Controllers
         private UserService userService = new UserService();
         private ContentService contentService = new ContentService();
         private AuthenticationService authenticationService = new AuthenticationService();
-
+        
         private string getCurrentUserId()
         {
             string value = HttpContext.Current.Request.Headers["Authorization"];
