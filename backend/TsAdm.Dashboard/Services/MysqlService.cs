@@ -18,11 +18,11 @@ namespace TsAdm.Dashboard.Services
             //用户名
             builder.UserID = "root";
             //密码
-            builder.Password = "dummy";
+            builder.Password = "123456";// "dummy";
             //服务器地址
             builder.Server = "localhost";
             //连接时的数据库
-            builder.Database = "dot_net_final";
+            builder.Database = "dotnetfinal";
             //定义与数据连接的链接
             MySqlConnection msc = new MySqlConnection(builder.ConnectionString);
             return msc;
