@@ -13,32 +13,22 @@
 		},
 		data() {
 			return {
-				prevRequest:'',
+				prevRequest: null,
 				list:[]			
 			}
 		},
 		methods: {
 			goTo(contents){
+				getApp().globalData.toDetailContentId=contents.id
 				uni.navigateTo({
 					url:"/pages/detail/detail",
 					success: (res) => {
-						getApp().globalData.toDetailContentId=contents.id
 					}
 				})
 			},
 			getContent(){
 				let token = uni.getStorageSync('token');
 				if (token) {
-					//尝试取上一次请求的id
-					uni.getStorage({
-						key: 'prevRequest',
-						success: (res) => {
-							this.prevRequest = res.data
-						},
-						fail: () => {
-							this.prevRequest = null
-						}
-					});
 					// 获得页面信息
 					myRequest({
 						url: 'content',
@@ -48,14 +38,7 @@
 						}
 					}).then((res) => {
 						if (res.statusCode == 200) {
-							try {
-								uni.setStorageSync('prevRequest', res.data.requestId);
-							} catch (e) {
-								uni.showToast({
-									icon: "none",
-									title: "存储prevRequest失败"
-								})
-							}
+							this.prevRequest = res.data.requestId
 							this.list = [...this.list,...res.data.contents]
 						}
 					})
@@ -75,6 +58,7 @@
 			this.getContent()
 		},
 		onPullDownRefresh() {
+			this.prevRequest = null
 			this.list = []
 			this.getContent()
 			uni.stopPullDownRefresh()

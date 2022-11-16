@@ -3,7 +3,7 @@
 		<image class="avatar" :src="userImg" mode="aspectFill"></image>
 		<text class="username">{{username}}</text>
 		<view v-if="!this.self" class="follow-buttons" @click="follow">
-			<button v-if="this.followingState" class="follow-button" :disabled="true">已关注</button>
+			<button v-if="this.following" class="follow-button">已关注</button>
 			<button v-else class="follow-button" type="primary">关注</button>
 		</view>
 		<view class="data-row">
@@ -29,21 +29,19 @@
 	} from '~@/util/api.js'
 	export default {
 		name: "user-info-panel",
-		props: [
-			'userId',
-			'username',
-			'follownum',
-			'fans',
-			'collect',
-			'userImg',
-			'self',
-			'following'
-		],
 		data() {
 			return {
-				followingState: this.following
+				userImg: '',
+				username: '',
+				self: false,
+				following: false,
+				follownum: 0,
+				fans: 0,
+				collect: 0
 			};
 		},
+		props: [
+		],
 		methods: {
 			follow() {
 				console.log('guanzhu clicked')
@@ -52,38 +50,55 @@
 					url: "me/follow/" + this.userId,
 					method: 'PATCH',
 					data: {
-						following: !this.followingState
+						following: !this.following
 					}
 				}).then((res) => {
 					if (res.statusCode == 200) {
-						this.followingState = res.data.following
+						this.following = res.data.following
 					}
 				})
 			},
 			getFans() {
+				getApp().globalData.toUserlistId = this.userId
+				getApp().globalData.userToWhitch = 1
 				uni.navigateTo({
 					url: "/pages/user-list/user-list",
 					success: (res) => {
-						getApp().globalData.toUserlistId = this.userId
-						getApp().globalData.userToWhitch = 1
 					}
 				})
 			},
 			getFollows() {
+				getApp().globalData.toUserlistId = this.userId
+				getApp().globalData.userToWhitch = 2
 				uni.navigateTo({
 					url: "/pages/user-list/user-list",
 					success: (res) => {
-						getApp().globalData.toUserlistId = this.userId
-						getApp().globalData.userToWhitch = 2
 					}
 				})
 			},
 			getFavorites() {
+				getApp().globalData.toContentListId = this.userId
 				uni.navigateTo({
 					url: "/pages/content-list/content-list",
 					success: (res) => {
-						getApp().globalData.toContentListId = this.userId
 					}
+				})
+			},
+			setUserId(userId) {
+				this.userId = userId
+				console.log('user-info-panel init')
+				const selfId = uni.getStorageSync('userId')
+				this.self = (selfId === userId)
+				myRequest({
+					url: 'user/'+ userId,
+					method: 'GET',
+				}).then(res => {
+					this.userImg = res.data.avatarUrl
+					this.username = res.data.username
+					this.following = res.data.following
+					this.follownum = res.data.followingCount
+					this.fans = res.data.followerCount
+					this.collect = res.data.favoriteCount
 				})
 			}
 		}

@@ -168,15 +168,15 @@
 				}
 			},
 			goComment() {
+				getApp().globalData.toCommentId = this.content.id
 				uni.navigateTo({
 					url: '/pages/new-comment/new-comment',
 					success: (res) => {
-						getApp().globalData.toCommentId = contents.id
 					}
 				})
 			}
 		},
-		async onLoad(options) {
+		async onShow() {
 			
 			const contentsId = getApp().globalData.toDetailContentId
 			let res;

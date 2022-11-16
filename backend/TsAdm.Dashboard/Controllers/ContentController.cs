@@ -15,7 +15,15 @@ namespace TsAdm.Dashboard.Controllers
         [Route("content")]
         public IHttpActionResult getContentAbstracts(string prevRequest)
         {
-            long prevRequestLong = long.Parse(prevRequest);
+            long prevRequestLong;
+            if (prevRequest == null)
+            {
+                prevRequestLong = 0;
+            }
+            else
+            {
+                prevRequestLong = long.Parse(prevRequest);
+            }
             List<ContentAbstract> contentAbstracts = contentService.getContents(prevRequestLong);
 
             string requestId = (prevRequestLong + contentAbstracts.Count).ToString();
@@ -27,9 +35,10 @@ namespace TsAdm.Dashboard.Controllers
 
         [HttpGet]
         [Route("content")]
-        public IHttpActionResult getContentAbstracts(long lastContentId, string userId)
+        public IHttpActionResult getContentAbstracts(long? lastContentId, string userId)
         {
-            List<ContentAbstract> contentAbstracts = contentService.getContentsByUserId(userId, lastContentId);
+            long seriousLastContentId = (lastContentId == null) ? 0 : lastContentId.Value;
+            List<ContentAbstract> contentAbstracts = contentService.getContentsByUserId(userId, seriousLastContentId);
 
             return Ok(contentAbstracts);
         }
@@ -82,11 +91,11 @@ namespace TsAdm.Dashboard.Controllers
             string currentUserId = getCurrentUserId();
             if (body.TryGetValue("like", out bool like))
             {
-                contentService.userLike(id,like,currentUserId);
+                contentService.userInteraction(id,like, null,currentUserId);
             }
             if (body.TryGetValue("favorite", out bool favorite))
             {
-                contentService.userfavorite(id, favorite, currentUserId);
+                contentService.userInteraction(id, null, favorite, currentUserId);
             }
             return Ok(contentService.getContentInteraction(id, currentUserId));
         }

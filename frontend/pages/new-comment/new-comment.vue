@@ -1,11 +1,12 @@
 <template>
 	<view class="new-comment">
-		<textarea name="comment" id="comment" cols="30" rows="10" placeholder="评论内容...">{{text}}</textarea>
+		<textarea name="comment" id="comment" cols="30" rows="10" placeholder="评论内容..." v-model="this.text"></textarea>
 		<button class="button-submit" type="primary" @click="release">发布</button>
 	</view>
 </template>
 
 <script>
+	import {myRequest} from '~@/util/api.js'
 	export default {
 		data() {
 			return {
@@ -23,15 +24,11 @@
 					}
 				}).then((res) => {
 					if(res.statusCode == 200){
+						getApp().globalData.toDetailContentId = this.contentsId
+						uni.navigateBack()
 						uni.showToast({
 							icon: "success",
 							title: "发布成功！"
-						})
-						uni.navigateTo({
-							url:"/pages/detail/detail",
-							success: (res) => {
-							getApp().globalData.toDetailContentId = contents.id
-						}
 						})
 					}
 				})

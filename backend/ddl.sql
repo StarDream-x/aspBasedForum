@@ -34,7 +34,7 @@ create table comment_user_liked(
 );
 
 create table comment(
-    id bigint primary key,
+    id bigint primary key auto_increment,
     user_id varchar(20),
     content text,
     like_count bigint

@@ -9,7 +9,7 @@
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
-			<input type="safe-password" id="password" v-model="password" :password="showPassword" focus placeholder="请输入密码">
+			<input type="safe-password" id="password" v-model="password" :password="showPassword" placeholder="请输入密码">
 		</view>
 		<button class="login-button" type="primary" @click="login">登录</button>
 	</view>

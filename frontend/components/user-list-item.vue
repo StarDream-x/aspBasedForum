@@ -6,7 +6,7 @@
 			<text class="introduction">{{introduction}}</text>
 		</view>
 		<view class="follow-buttons" @click="follow">
-			<button v-if="this.following" class="follow-button following" :disabled="true">已关注</button>
+			<button v-if="this.nowFollowing" class="follow-button following">已关注</button>
 			<button v-else class="follow-button not-following" type="primary">关注</button>
 		</view>
 	</view>
@@ -24,7 +24,9 @@
 			'userId'
 		],
 		data() {
-			return {};
+			return {
+				nowFollowing: false
+			};
 		},
 		methods: {
 			toUser(){
@@ -40,14 +42,17 @@
 					url: "me/follow/" + this.userId,
 					method: 'PATCH',
 					data: {
-						target_id: this.userId
+						following: !this.nowFollowing
 					}
 				}).then((res) => {
 					if (res.statusCode == 200) {
-						this.following = res.data
+						this.nowFollowing = res.data.following
 					}
 				})
 			}
+		},
+		created() {
+			this.nowFollowing = this.following
 		}
 	}
 </script>

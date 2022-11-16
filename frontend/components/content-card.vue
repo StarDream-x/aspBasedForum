@@ -3,10 +3,10 @@
 		<image class="cover" :src="this.imageSrc || '/static/logo.png'" mode="aspectFill"></image>
 		<view class="info">
 			<view class="info__content">
-					<text class="title">{{title || '标题'}}</text>
+					<text class="title">{{title}}</text>
 				<view class="info__content__bottom">					
-					<text class="author">{{author || '作者'}}</text>
-				<text class="view-count">{{viewCount || '阅读量'}}</text>
+					<text class="author">{{author}}</text>
+				<text class="view-count">{{viewCount}}</text>
 				</view>
 			</view>
 		</view>

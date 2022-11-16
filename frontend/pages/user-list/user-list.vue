@@ -38,7 +38,7 @@
 			if(getApp().globalData.userToWhitch == 1){
 				//TODO:获取用户粉丝列表
 				myRequest({
-					url: 'user/'+this.userId+"/follower",
+					url: 'user/'+userId+"/follower",
 					method: 'GET',
 				}).then((res) => {
 					if (res.statusCode == 200){
@@ -49,7 +49,7 @@
 			else{
 				//TODO:获取用户关注列表
 				myRequest({
-					url: 'user/'+this.userId+"/following",
+					url: 'user/'+userId+"/following",
 					method: 'GET',
 				}).then((res) => {
 					if (res.statusCode == 200){

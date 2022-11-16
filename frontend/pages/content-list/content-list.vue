@@ -22,7 +22,7 @@
 			//TODO:获取用户收藏的文章列表
 			const userId = getApp().globalData.toContentListId
 			myRequest({
-				url: 'user/'+this.userId+"/favorite",
+				url: 'user/'+userId+"/favorite",
 				method: 'GET',
 			}).then((res) => {
 				if (res.statusCode == 200){

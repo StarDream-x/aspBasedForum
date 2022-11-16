@@ -1,7 +1,5 @@
 <template>
-	<UserInfoPanel :username="this.username" :follownum="this.follownum" 
-	:fans="this.fans" :collect="this.collect" :userImg="this.userImg" 
-	:self="true" :following="false" :userId="this.userId"/>
+	<UserInfoPanel ref="userInfoPanel"/>
 	<view class="post-list">
 		<view class="post-list__head">发布内容</view>
 		<view class="post-list__body">
@@ -17,14 +15,8 @@
 	export default {
 		data() {
 			return {
-				userImg:'',
 				userId:null,
-				username:null,
-				follownum:null,
-				fans:null,
-				collect:null,
-				like:null,
-				lastContentId:'',
+				lastContentId: null,
 				list:[
 				]
 			}
@@ -41,27 +33,6 @@
 						key: 'userId',
 						success: (res) => {
 							this.userId = res.data
-							myRequest({
-								url: 'user/'+this.userId,
-								method: 'GET',
-							}).then((res) => {
-								if (res.statusCode == 200){
-									this.userImg = res.data.avatarUrl
-									this.username = res.data.username
-									this.follownum = res.data.followingCount
-									this.fans = res.data.followerCount
-									this.collect = res.data.favoriteCount
-								}
-							})
-							uni.getStorage({
-								key: 'lastContentId',
-								success: (res) => {
-									this.lastContentId = res.data
-								},
-								fail: () => {
-									this.lastContentId = null
-								}
-							});
 							//获取用户发布的信息
 							myRequest({
 								url: 'content',
@@ -73,7 +44,9 @@
 							}).then((res) => {
 								if (res.statusCode == 200) {
 									this.list = [...this.list,...res.data]
-									uni.setStorageSync('lastContentId',this.list[this.list.length-1].id)//存疑									
+									if (this.list.length !== 0) {
+										this.lastContentId = this.list[this.list.length-1].id
+									}
 								}
 							})
 						},
@@ -96,30 +69,29 @@
 		onLoad() {
 			this.getInfo();
 		},
+		onReady() {
+			this.$refs.userInfoPanel.setUserId(this.userId)
+		},
+		onShow() {
+			this.$refs.userInfoPanel.setUserId(this.userId)
+		},
 		onReachBottom() {
-			uni.getStorage({
-					key: 'lastContentId',
-					success: (res) => {
-						this.lastContentId = res.data
-					},
-					fail: () => {
-						this.lastContentId = null
+			//获取用户发布的信息
+			myRequest({
+				url: 'content',
+				method: 'GET',
+				data: {
+					userId:this.userId,
+					lastContentId: this.lastContentId
+				}
+			}).then((res) => {
+				if (res.statusCode == 200) {
+					this.list = [...this.list,...res.data]
+					if (this.list.length !== 0) {
+						this.lastContentId = this.list[this.list.length-1].id
 					}
-				});
-				//获取用户发布的信息
-				myRequest({
-					url: 'content',
-					method: 'GET',
-					data: {
-						userId:this.userId,
-						lastContentId: this.lastContentId
-					}
-				}).then((res) => {
-					if (res.statusCode == 200) {
-						this.list = [...this.list,...res.data]
-						uni.setStorageSync('lastContentId',this.list[this.list.length-1].id)									
-					}
-				})
+				}
+			})
 		}
 	}
 </script>

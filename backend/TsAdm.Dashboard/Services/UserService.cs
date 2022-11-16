@@ -83,10 +83,12 @@ namespace TsAdm.Dashboard.Services
                         $"where content_id = {contentId} " +
                         $"limit 1";
                     MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                    MySqlDataReader reader2 = cmd2.ExecuteReader();
-                    if (reader2.Read())
+                    using (MySqlDataReader reader2 = cmd2.ExecuteReader())
                     {
-                        contentAbstract.imageUrl = reader2.GetString(0);
+                        if (reader2.Read())
+                        {
+                            contentAbstract.imageUrl = reader2.GetString(0);
+                        }
                     }
                 }
 
@@ -169,34 +171,46 @@ namespace TsAdm.Dashboard.Services
         }
 
         //关注,取消关注  同样问题
-        public bool userFollow(string currentUserId,string target_id,bool following)
+        public bool userFollow(string currentUserId, string target_id, bool following)
         {
             using (MySqlConnection msc = mysqlService.newConnection())
             {
                 msc.Open();
-                if (!following)
+                string sql2 = $"select * from user_following where follower_id = '{currentUserId}' and " +
+                    $"followee_id = '{target_id}'";
+                MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
+                bool exist;
+                using (MySqlDataReader mySqlDataReader = cmd2.ExecuteReader())
+                {
+                    exist = mySqlDataReader.Read();
+                }
+
+                if (!following && exist)
                 {
                     string sql = $"delete from user_following where follower_id = '{currentUserId}' and " +
                         $"followee_id = '{target_id}'";
                     MySqlCommand cmd = new MySqlCommand(sql, msc);
                     cmd.ExecuteNonQuery();
+                    string sql6 = $"update user_info set following_count=following_count-1 where id='{currentUserId}'";
+                    MySqlCommand cmd6 = new MySqlCommand(sql6, msc);
+                    cmd6.ExecuteNonQuery();
+                    string sql7 = $"update user_info set follower_count=follower_count-1 where id='{target_id}'";
+                    MySqlCommand cmd7 = new MySqlCommand(sql7, msc);
+                    cmd7.ExecuteNonQuery();
                 }
-                else
+                else if (following && !exist)
                 {
-                    string sql2 = $"select * from user_following where follower_id = '{currentUserId}' and " +
-                        $"followee_id = '{target_id}'";
-                    MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
-                    bool exist;
-                    using (MySqlDataReader mySqlDataReader = cmd2.ExecuteReader())
-                    {
-                        exist = mySqlDataReader.Read();
-                    }
-                    if (!exist)
-                    {
-                        string sql3 = $"insert into user_following values ('{currentUserId}', '{target_id}')";
-                        MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
-                        cmd3.ExecuteNonQuery();
-                    }
+                    string sql3 = $"insert into user_following values ('{currentUserId}', '{target_id}')";
+                    MySqlCommand cmd3 = new MySqlCommand(sql3, msc);
+                    cmd3.ExecuteNonQuery();
+
+                    string sql4 = $"update user_info set following_count=following_count+1 where id='{currentUserId}'";
+                    MySqlCommand cmd4 = new MySqlCommand(sql4, msc);
+                    cmd4.ExecuteNonQuery();
+                    string sql5 = $"update user_info set follower_count=follower_count+1 where id='{target_id}'";
+                    MySqlCommand cmd5 = new MySqlCommand(sql5, msc);
+                    cmd5.ExecuteNonQuery();
+
                 }
             }
             return following;

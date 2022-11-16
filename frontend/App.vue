@@ -3,7 +3,7 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			mock()
+			// mock()
 		},
 		onShow: function() {
 			console.log('App Show')

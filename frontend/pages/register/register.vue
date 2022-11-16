@@ -5,7 +5,7 @@
 	<view class="panel">
 		<view class="field">
 			<label for="account">账户：</label>
-			<input type="text" id="account" v-model="username" @blur="checkAccount">
+			<input type="text" id="account" v-model="username" focus @blur="checkAccount">
 		</view>
 		<view class="field">
 			<label for="password">密码：</label>
@@ -45,6 +45,7 @@
 							url:"register",
 							method:"POST",
 							data:{
+								id: this.username,
 								username:this.username,
 								password:this.password1
 							}
@@ -76,7 +77,7 @@
 			checkAccount(e){
 				// console.log("触发")
 				myRequest({
-					url:"register/checkId",
+					url:"register/check_id",
 					method:"GET",
 					data: {
 						id:this.username
