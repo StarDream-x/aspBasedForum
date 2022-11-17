@@ -215,5 +215,27 @@ namespace TsAdm.Dashboard.Services
             }
             return following;
         }
+
+        public void updateAvatar(string avatarUrl, string currentUserId)
+        {
+            using (MySqlConnection msc = mysqlService.newConnection())
+            {
+                msc.Open();
+                string sql = $"update user_info set avatar_url={avatarUrl} where id={currentUserId}";
+                MySqlCommand cmd = new MySqlCommand(sql, msc);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void updateUsername(string username, string currentUserId)
+        {
+            using (MySqlConnection msc = mysqlService.newConnection())
+            {
+                msc.Open();
+                string sql = $"update user_info set name={username} where id={currentUserId}";
+                MySqlCommand cmd = new MySqlCommand(sql, msc);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

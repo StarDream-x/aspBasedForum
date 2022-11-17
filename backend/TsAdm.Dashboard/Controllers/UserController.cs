@@ -169,5 +169,30 @@ namespace TsAdm.Dashboard.Controllers
 
         //}
 
+        [HttpPatch]
+        [Route("/me/avatarUrl")]
+        public IHttpActionResult updateAvatarUrl([FromBody] Dictionary<string, string> body)
+        {
+            string currentUserId = getCurrentUserId();
+            if (body.TryGetValue("avatarUrl", out string avatarUrl))
+            {
+                userService.updateAvatar(avatarUrl, currentUserId);
+                return Ok();
+            }
+            return BadRequest("Malformed request body");
+        }
+
+        [HttpPatch]
+        [Route("/me/username")]
+        public IHttpActionResult updateUsername([FromBody] Dictionary<string, string> body)
+        {
+            string currentUserId = getCurrentUserId();
+            if (body.TryGetValue("username", out string username))
+            {
+                userService.updateUsername(username, currentUserId);
+                return Ok();
+            }
+            return BadRequest("Malformed request body");
+        }
     }
 }
