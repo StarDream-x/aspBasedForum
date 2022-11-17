@@ -1,9 +1,10 @@
 <template>
 	<input type="text" class="username" v-model="this.username">
-	<button type="primary" class="submit-button">完成修改</button>
+	<button type="primary" class="submit-button" @click="update">完成修改</button>
 </template>
 
 <script>
+	import {myRequest} from '~@/util/api.js'
 	export default {
 		data() {
 			return {
@@ -11,7 +12,22 @@
 			}
 		},
 		methods: {
-			
+			update(){
+				myRequest({
+					url: "me/username",
+					method: 'PATCH',
+					data:{
+						username:this.username
+					}
+				}).then((res) => {
+					if (res.statusCode == 200){
+						this.username = res.data
+					}
+				})
+				uni.reLaunch({
+					url:"/pages/user/user"
+				})
+			}
 		}
 	}
 </script>

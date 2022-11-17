@@ -18,6 +18,8 @@
 			toUserlistId:0,//用于表示前往用户表时当前用户id
 			toOtherUserId:0,//用于表示前往其他用户主页时那个用户的Id
 			toContentListId:0,//用于表示前往内容表时当前用户的id
+			preAvartar:'',
+			preUsername:''
 	
 		}
 	}
