@@ -15,16 +15,10 @@ create table user_following(
     primary key(follower_id, followee_id)
 );
 
-create table media(
-    id bigint primary key,
-    type varchar(10),
-    url varchar(100)
-);
-
 create table content_media(
     content_id bigint,
-    media_id bigint,
-    primary key(content_id, media_id)
+    media_url varchar(100),
+    primary key(content_id, media_url)
 );
 
 create table comment_user_liked(
@@ -55,7 +49,7 @@ create table content_user_interaction(
 );
 
 create table content(
-    id bigint primary key,
+    id bigint primary key auto_increment,
     title text,
     author_id varchar(20),
     view_count bigint,

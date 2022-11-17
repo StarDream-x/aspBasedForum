@@ -96,6 +96,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/upload-avatar/upload-avatar",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "上传头像",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/update-username/update-username",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "修改昵称",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"backgroundColor": "#fff",

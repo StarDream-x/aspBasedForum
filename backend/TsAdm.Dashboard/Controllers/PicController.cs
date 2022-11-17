@@ -10,6 +10,8 @@ using System.IO;
 using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TsAdm.Dashboard.Controllers
 {
@@ -44,14 +46,16 @@ namespace TsAdm.Dashboard.Controllers
 
         //}
 
+        public const string imgRoot = @"D:\img";
+
         [HttpGet]
-        [Route("getImg/{type}/{pname}")]
-        public HttpResponseMessage getImg([FromUri] string type, [FromUri] string pname)
+        [Route("img/{imgName}")]
+        public HttpResponseMessage getImg([FromUri] string imgName)
         {
             try
             {
                 //string pname = "pic.png";
-                var imgPath = @"D:\dotnetProject\img\" + pname + "." + type;
+                var imgPath = imgRoot + "\\" + imgName;
                 //从图片中读取byte
                 var imgByte = File.ReadAllBytes(imgPath);
                 //从图片中读取流
@@ -62,7 +66,7 @@ namespace TsAdm.Dashboard.Controllers
                     //或者
                     //Content = new StreamContent(stream)
                 };
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/"+type);
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 return resp;
             }
             catch (Exception err)
@@ -90,6 +94,36 @@ namespace TsAdm.Dashboard.Controllers
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
 
+        }
+
+        [HttpPost]
+        [Route("media")]
+        public async Task<HttpResponseMessage> PostPicture()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var provider = new MultipartFormDataStreamProvider(imgRoot);
+
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                string localFilePath = provider.FileData[0].LocalFileName;
+                string localFileName = Path.GetFileName(localFilePath);
+                string resultPath = "/img/" + localFileName;
+                Dictionary<string, string> result = new Dictionary<string, string>();
+                result.Add("fileUrl", resultPath);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
     }

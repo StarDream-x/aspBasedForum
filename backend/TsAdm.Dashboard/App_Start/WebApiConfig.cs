@@ -19,7 +19,7 @@ namespace TsAdm.Dashboard
             config.MapHttpAttributeRoutes();
             config.Filters.Add(new DxExceptionAttribute());
 
-            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
+            //config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
 
             config.Routes.MapHttpRoute(
                 "DefaultApi",

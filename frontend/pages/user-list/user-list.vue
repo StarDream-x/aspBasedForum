@@ -11,13 +11,6 @@
 		data() {
 			return {
 				users: [
-					{
-						id: "id",
-						avatarUrl: "/static/logo.png",
-						username: 'username',
-						introduction: "introduction",
-						following: false
-					}
 				]
 			}
 		},

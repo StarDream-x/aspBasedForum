@@ -24,10 +24,10 @@
 		},
 		methods: {
 			goToDetail(){
+				getApp().globalData.toDetailContentId = this.content.id
 				uni.navigateTo({
 					url:"/pages/detail/detail",
 					success: (res) => {
-						getApp().globalData.toDetailContentId = this.content.id
 					}
 				})
 			}

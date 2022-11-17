@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.137.1/'
+const BASE_URL = 'http://localhost/'
 
 export const myRequest = (options) => {
 	return new Promise((resolve, reject) => {

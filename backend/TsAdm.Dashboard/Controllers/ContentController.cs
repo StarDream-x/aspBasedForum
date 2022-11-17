@@ -10,6 +10,7 @@ namespace TsAdm.Dashboard.Controllers
     public class ContentController : ApiController
     {
         private ContentService contentService = new ContentService();
+        private PostService postService = new PostService();
 
         [HttpGet]
         [Route("content")]
@@ -41,6 +42,14 @@ namespace TsAdm.Dashboard.Controllers
             List<ContentAbstract> contentAbstracts = contentService.getContentsByUserId(userId, seriousLastContentId);
 
             return Ok(contentAbstracts);
+        }
+
+        [HttpPost]
+        [Route("content")]
+        public IHttpActionResult postContent([FromBody] ContentPost request)
+        {
+            string currentUserId = getCurrentUserId();
+            return Ok(postService.postContent(request, currentUserId));
         }
 
         private string getCurrentUserId()

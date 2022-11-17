@@ -79,7 +79,7 @@ namespace TsAdm.Dashboard.Services
                 foreach (ContentAbstract contentAbstract in contentAbstracts)
                 {
                     long contentId = contentAbstract.id;
-                    string sql2 = $"select media.url from media, content_media " +
+                    string sql2 = $"select media_url from content_media " +
                         $"where content_id = {contentId} " +
                         $"limit 1";
                     MySqlCommand cmd2 = new MySqlCommand(sql2, msc);

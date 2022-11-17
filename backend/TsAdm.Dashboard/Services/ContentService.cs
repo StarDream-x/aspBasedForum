@@ -42,7 +42,7 @@ namespace TsAdm.Dashboard.Services
                 foreach (ContentAbstract contentAbstract in contentAbstracts)
                 {
                     long contentId = contentAbstract.id;
-                    string sql2 = $"select media.url from media, content_media " +
+                    string sql2 = $"select media_url from content_media " +
                         $"where content_id = {contentId} " +
                         $"limit 1";
                     MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
@@ -92,7 +92,7 @@ namespace TsAdm.Dashboard.Services
                 foreach (ContentAbstract contentAbstract in contentAbstracts)
                 {
                     long contentId = contentAbstract.id;
-                    string sql2 = $"select media.url from media, content_media " +
+                    string sql2 = $"select media_url from content_media " +
                         $"where content_id = {contentId} " +
                         $"limit 1";
                     MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
@@ -138,8 +138,8 @@ namespace TsAdm.Dashboard.Services
                     }
                 }
 
-                string sql2 = $"select type, url from media, content_media " +
-                    $"where content_media.media_id = media.id and " +
+                string sql2 = $"select media_url from content_media " +
+                    $"where " +
                     $"content_media.content_id = {contentId}";
 
                 MySqlCommand cmd2 = new MySqlCommand(sql2, msc);
@@ -150,8 +150,8 @@ namespace TsAdm.Dashboard.Services
                     while (reader1.Read())
                     {
                         MediaItem item = new MediaItem();
-                        item.type = reader1.GetString(0);
-                        item.imageUrl = item.url = reader1.GetString(1);
+                        item.type = "picture";
+                        item.imageUrl = item.url = reader1.GetString(0);
                         list.Add(item);
                     }
                     content.media = list.ToArray();

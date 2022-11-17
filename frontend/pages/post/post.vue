@@ -25,11 +25,12 @@
 			uploadImg(path) {
 				this.filePath.push(path);
 				uni.uploadFile({
-					url: 'http://localhost:3000/content/media',
+					url: 'http://localhost/media',
 					filePath: path,
 					name: 'file',
 					success: res => {
-						this.media.push(res.data.fileUrl);
+						const resp = JSON.parse(res.data)
+						this.media.push(resp.fileUrl);
 					}
 				});
 			},

@@ -186,6 +186,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\SearchCommand\UserCommand.cs" />
+    <Compile Include="RequestBodies\ContentPost.cs" />
     <Compile Include="RequestBodies\UserInfo.cs" />
     <Compile Include="RequestBodies\LoginBody.cs" />
     <Compile Include="RequestBodies\RegisterBody.cs" />
