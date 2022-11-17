@@ -1,6 +1,6 @@
 <template>
 	<view class="user-list-item">
-		<image class="avatar" :src="this.avatarUrl" mode="aspectFill" @click="toUser"></image>
+		<image class="avatar" :src="this.avatarUrl||'/static/default_avatar.jpg'" mode="aspectFill" @click="toUser"></image>
 		<view class="texts">
 			<text class="username">{{username}}</text>
 			<text class="introduction">{{introduction}}</text>

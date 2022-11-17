@@ -221,7 +221,7 @@ namespace TsAdm.Dashboard.Services
             using (MySqlConnection msc = mysqlService.newConnection())
             {
                 msc.Open();
-                string sql = $"update user_info set avatar_url={avatarUrl} where id={currentUserId}";
+                string sql = $"update user_info set avatar_url='{avatarUrl}' where id='{currentUserId}'";
                 MySqlCommand cmd = new MySqlCommand(sql, msc);
                 cmd.ExecuteNonQuery();
             }
@@ -232,7 +232,7 @@ namespace TsAdm.Dashboard.Services
             using (MySqlConnection msc = mysqlService.newConnection())
             {
                 msc.Open();
-                string sql = $"update user_info set name={username} where id={currentUserId}";
+                string sql = $"update user_info set name='{username}' where id='{currentUserId}'";
                 MySqlCommand cmd = new MySqlCommand(sql, msc);
                 cmd.ExecuteNonQuery();
             }

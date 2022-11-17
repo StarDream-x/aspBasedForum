@@ -9,12 +9,11 @@
 		data() {
 			return {
 				avatarValue: {
-					name: '/img/BodyPart_5bc63f3e-180c-4193-8a64-6837e9ab94f0',
-					extName: '/img/BodyPart_5bc63f3e-180c-4193-8a64-6837e9ab94f0',
-					url: '/img/BodyPart_5bc63f3e-180c-4193-8a64-6837e9ab94f0'
+					name: '',
+					extName: '',
+					url: ''
 				},
-				filePath: [],
-				media: []
+				url: ''
 			}
 		},
 		methods: {
@@ -22,24 +21,35 @@
 				this.uploadImg(e.tempFilePaths[0]);
 			},
 			uploadImg(path) {
-				this.filePath.push(path);
 				uni.uploadFile({
-					url: 'http://localhost/me/avatarUrl',
+					url: 'http://localhost/media',
 					filePath: path,
 					name: 'file',
 					success: res => {
 						const resp = JSON.parse(res.data)
-						this.media.push(resp.fileUrl);
+						this.url = resp.fileUrl;
 					}
 				});
 			},
-			deletePic(e) {
-				const num = this.filePath.findIndex(v => v.url === e.tempFilePath);
-				this.media.splice(num, 1);
-				this.filePath.splice(num, 1);
-			},
 			update(){
-				uni.navigateBack()
+				myRequest({
+					url: 'me/avatarUrl',
+					method: 'PATCH',
+					data: {
+						avatarUrl: this.url
+					}
+				})
+				uni.reLaunch({
+					url: '/pages/user/user'
+				})
+			}
+		},
+		onLoad() {
+			const preAvatar = getApp().globalData.preAvatar
+			this.avatarValue = {
+				name: preAvatar,
+				extName: preAvatar,
+				url: preAvatar
 			}
 		}
 	}

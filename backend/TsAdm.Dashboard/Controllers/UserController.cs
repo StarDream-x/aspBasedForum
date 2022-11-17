@@ -170,7 +170,7 @@ namespace TsAdm.Dashboard.Controllers
         //}
 
         [HttpPatch]
-        [Route("/me/avatarUrl")]
+        [Route("me/avatarUrl")]
         public IHttpActionResult updateAvatarUrl([FromBody] Dictionary<string, string> body)
         {
             string currentUserId = getCurrentUserId();
@@ -183,7 +183,7 @@ namespace TsAdm.Dashboard.Controllers
         }
 
         [HttpPatch]
-        [Route("/me/username")]
+        [Route("me/username")]
         public IHttpActionResult updateUsername([FromBody] Dictionary<string, string> body)
         {
             string currentUserId = getCurrentUserId();

@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 		<view class="author-info">
-			<image class="avatar" :src="detailUser.avatarUrl" mode="aspectFill" @click="toUser"></image>
+			<image class="avatar" :src="detailUser.avatarUrl||'/static/default_avatar.jpg'" mode="aspectFill" @click="toUser"></image>
 			<text class="author-name">{{detailUser.username}}</text>
 		</view>
 		<ImageSwiper :imageUrls="this.imageUrls" />

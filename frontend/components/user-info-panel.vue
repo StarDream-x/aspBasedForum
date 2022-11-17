@@ -1,6 +1,6 @@
 <template>
 	<view class="user-info">
-		<image class="avatar" :src="userImg" mode="aspectFill" @click="changeAvatar"></image>
+		<image class="avatar" :src="userImg||'/static/default_avatar.jpg'" mode="aspectFill" @click="changeAvatar"></image>
 		<text class="username" @click="changeUsername">{{username}}</text>
 		<view v-if="!this.self" class="follow-buttons" @click="follow">
 			<button v-if="this.following" class="follow-button">已关注</button>
@@ -44,16 +44,20 @@
 		],
 		methods: {
 			changeAvatar(){
-				getApp().globalData.preAvartar = this.userImg
-				uni.navigateTo({
-					url:"/pages/upload-avatar/upload-avatar"
-				})
+				if (this.self) {
+					getApp().globalData.preAvartar = this.userImg
+					uni.navigateTo({
+						url:"/pages/upload-avatar/upload-avatar"
+					})
+				}
 			},
 			changeUsername(){
-				getApp().globalData.preUsername = this.username
-				uni.navigateTo({
-					url:"/pages/update-username/update-username"
-				})
+				if (this.self) {
+					getApp().globalData.preUsername = this.username
+					uni.navigateTo({
+						url:"/pages/update-username/update-username"
+					})
+				}
 			},
 			follow() {
 				console.log('guanzhu clicked')

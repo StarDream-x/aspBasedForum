@@ -28,6 +28,9 @@
 					url:"/pages/user/user"
 				})
 			}
+		},
+		onLoad() {
+			this.username = getApp().globalData.preUsername
 		}
 	}
 </script>
