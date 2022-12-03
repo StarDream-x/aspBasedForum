@@ -2,7 +2,7 @@
 	<view>
 		<uni-file-picker title="选择图片" :limit="9" file-mediatype="image" mode="grid" @select="select" @delete="deletePic"></uni-file-picker>
 		<input type="text" class="title" placeholder="标题" v-model="this.title" />
-		<textarea name="text-content" id="text-content" cols="30" rows="20" placeholder="写下你想说的话吧!" v-model="this.body"></textarea>
+		<textarea name="text-content" id="text-content" cols="30" rows="100" placeholder="写下你想说的话吧!" v-model="this.body"></textarea>
 		<button class="post-button" type="primary" @click="postContent">发布</button>
 	</view>
 </template>

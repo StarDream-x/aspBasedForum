@@ -53,7 +53,7 @@ namespace TsAdm.Dashboard.Controllers
             if (result)
             {
                 tokenhub.generateToken(body.id);
-                string token = tokenhub.getToken(body.id);
+                string token = tokenhub.getToken();
                 Dictionary<string, object> result2 = new Dictionary<string, object>();
                 result2.Add("token", token);
                 return Ok(result2);
@@ -71,7 +71,7 @@ namespace TsAdm.Dashboard.Controllers
             if (authenticationService.login(body))
             {
                 tokenhub.generateToken(body.Id);
-                string token = tokenhub.getToken(body.Id);
+                string token = tokenhub.getToken();
                 Dictionary<string, object> result = new Dictionary<string, object>();
                 result.Add("token", token);
                 return Ok(result);

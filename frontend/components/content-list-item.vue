@@ -4,7 +4,7 @@
 		<view class="item-info">
 			<text class="title">{{content.title || '标题'}}</text>
 			<view class="item-info__bottom">
-				<text class="author">{{content.author || '作者'}}</text>
+				<text class="author">{{content.authorName || '作者'}}</text>
 				<text class="view-count">{{content.viewCount || '阅读量'}}</text>
 			</view>
 		</view>

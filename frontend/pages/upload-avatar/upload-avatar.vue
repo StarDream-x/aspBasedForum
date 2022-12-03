@@ -38,9 +38,16 @@
 					data: {
 						avatarUrl: this.url
 					}
-				})
-				uni.reLaunch({
-					url: '/pages/user/user'
+				}).then(() => {
+					uni.showToast({
+						title: '修改成功',
+						icon: 'success',
+						success() {
+							uni.reLaunch({
+								url:"/pages/user/user"
+							})
+						}
+					})
 				})
 			}
 		},

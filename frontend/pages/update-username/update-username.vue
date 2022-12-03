@@ -20,12 +20,15 @@
 						username:this.username
 					}
 				}).then((res) => {
-					if (res.statusCode == 200){
-						this.username = res.data
-					}
-				})
-				uni.reLaunch({
-					url:"/pages/user/user"
+					uni.showToast({
+						title: '修改成功',
+						icon: 'success',
+						success() {
+							uni.reLaunch({
+								url:"/pages/user/user"
+							})
+						}
+					})
 				})
 			}
 		},
